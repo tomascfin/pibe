@@ -1,0 +1,31 @@
+{
+  "name": "pibe",
+  "authors": [
+    "Tomas Riquelme"
+  ],
+  "description": "software pibe",
+  "main": "none",
+  "keywords": [
+    "none"
+  ],
+  "license": "Tomas Riquelme",
+  "homepage": "none",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-material": "^1.1.4",
+    "angular-ui-router": "^1.0.3",
+    "angular": "^1.6.4",
+    "bootstrap": "^3.3.7",
+    "angular-rut": "^1.0.2",
+    "angular-ui-uploader": "^1.4.1",
+    "angular-ui-select": "^0.19.8",
+    "angular-sanitize": "^1.6.4"
+  }
+}

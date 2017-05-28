@@ -1,0 +1,26 @@
+{
+  "name": "pibe",
+  "authors": [
+    "Tomas Riquelme"
+  ],
+  "description": "software pibe",
+  "main": "angular",
+  "keywords": [
+    "none"
+  ],
+  "license": "Tomas Riquelme",
+  "homepage": "none",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-ui-router": "^1.0.3",
+    "angular": "^1.6.4",
+    "bootstrap": "^3.3.7"
+  }
+}
