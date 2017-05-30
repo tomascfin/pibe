@@ -1,9 +1,9 @@
-/home/tomas/NetBeansProjects/pibe/src/main/java/com/eos/pibe/services/ServiciosRest.java
-/home/tomas/NetBeansProjects/pibe/src/main/java/com/eos/pibe/model/Comuna.java
-/home/tomas/NetBeansProjects/pibe/src/main/java/com/eos/pibe/rest/PibeRest.java
-/home/tomas/NetBeansProjects/pibe/src/main/java/com/tomas/utils/ApplicationConfig.java
-/home/tomas/NetBeansProjects/pibe/src/main/java/com/eos/pibe/model/Entidad.java
-/home/tomas/NetBeansProjects/pibe/src/main/java/com/eos/pibe/model/Region.java
-/home/tomas/NetBeansProjects/pibe/src/main/java/com/eos/pibe/model/NumerosDeSerie.java
-/home/tomas/NetBeansProjects/pibe/src/main/java/com/eos/pibe/model/Contacto.java
-/home/tomas/NetBeansProjects/pibe/src/main/java/com/eos/pibe/model/Provincia.java
+C:\Users\Antonella\Desktop\software pibe\pibe\pibe\src\main\java\com\eos\pibe\model\Region.java
+C:\Users\Antonella\Desktop\software pibe\pibe\pibe\src\main\java\com\eos\pibe\rest\PibeRest.java
+C:\Users\Antonella\Desktop\software pibe\pibe\pibe\src\main\java\com\eos\pibe\services\ServiciosRest.java
+C:\Users\Antonella\Desktop\software pibe\pibe\pibe\src\main\java\com\tomas\utils\ApplicationConfig.java
+C:\Users\Antonella\Desktop\software pibe\pibe\pibe\src\main\java\com\eos\pibe\model\NumerosDeSerie.java
+C:\Users\Antonella\Desktop\software pibe\pibe\pibe\src\main\java\com\eos\pibe\model\Comuna.java
+C:\Users\Antonella\Desktop\software pibe\pibe\pibe\src\main\java\com\eos\pibe\model\Contacto.java
+C:\Users\Antonella\Desktop\software pibe\pibe\pibe\src\main\java\com\eos\pibe\model\Entidad.java
+C:\Users\Antonella\Desktop\software pibe\pibe\pibe\src\main\java\com\eos\pibe\model\Provincia.java
