@@ -6,6 +6,7 @@
 package com.eos.pibe.rest;
 
 import com.eos.pibe.model.Entidad;
+import com.eos.pibe.model.NumerosDeSerie;
 import com.eos.pibe.services.ServiciosRest;
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
@@ -16,9 +17,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 import javax.ejb.EJB;
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -38,12 +41,14 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.StreamingOutput;
+import org.eclipse.persistence.jpa.jpql.parser.DateTime;
 
 /**
  *
  * @author tomas
  */
 @Path("pibe")
+@Stateless
 public class PibeRest {
 
     @EJB
@@ -62,7 +67,7 @@ public class PibeRest {
                 try {
                     serviciosRest.obtenerListadoSeries(outputStream);
                 } catch (Exception e) {
-                    System.out.println("Error: " + e.getMessage());
+                    System.out.println("Error en listar series: " + e.getMessage());
                 }
             }
         };
@@ -79,7 +84,7 @@ public class PibeRest {
                 try {
                     serviciosRest.listarComunas(outputStream);
                 } catch (Exception e) {
-                    System.out.println("Error: " + e.getMessage());
+                    System.out.println("Error en listar comunas: " + e.getMessage());
                 }
             }
         };
@@ -145,7 +150,7 @@ public class PibeRest {
         System.out.println(fileLocation);
         //saving file  
         try {
-            escanear(fileLocation);
+            
              File file = new File(fileLocation);
              file.setWritable(true);
             FileOutputStream out = new FileOutputStream(file);
@@ -158,9 +163,12 @@ public class PibeRest {
             while ((read = uploadedInputStream.read(bytes)) != -1) {
                 out.write(bytes, 0, read);
             }
+           
             
             out.flush();
             out.close();
+             escanear(fileLocation);
+            
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -171,14 +179,71 @@ public class PibeRest {
     public void escanear(String file){
      
         try(Scanner scanner = new Scanner(new File(file))) {
-        scanner.useDelimiter(",");
+           
+            scanner.useDelimiter(",");
+        String valor = "";
         while(scanner.hasNext()){
-            System.out.print(scanner.next()+"|");
+           
+            
+            valor = scanner.next();
         }
+        scanner.close();
+        
+         NumerosDeSerie serie = new NumerosDeSerie();
+                    serie.setActivado(false);
+                    serie.setAnuladoPorReinstalacion(false);
+                    serie.setId(valor);
+                    serie.setEntidad(null);
+                    serie.setUsos(0);
+                    Date fecha= new Date();
+                    serie.setFechaIngreso(fecha);
+             serviciosRest.registrarSerie(serie);
         }catch (FileNotFoundException e){
 
             e.printStackTrace();
         }
     }
+    
+    public String escanear2(String file){
+     String valor = "";
+        try(Scanner scanner = new Scanner(new File(file))) {
+        scanner.useDelimiter(",");
+        while(scanner.hasNext()){
+            System.out.print(scanner.hasNextLine()+"|");
+            valor = scanner.next();
+        }
+        }catch (FileNotFoundException e){
 
+            e.printStackTrace();
+        }
+        return valor;
+    }
+    
+     @GET
+    @Path("registrar_serie")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response registrarSerie() {
+        StreamingOutput so = new StreamingOutput() {
+            @Override
+            public void write(OutputStream outputStream) throws IOException, WebApplicationException {
+               
+                    String valor = "";
+                    String filename = "c://upload/prueba csv.csv";
+                    valor = escanear2(filename);
+                    NumerosDeSerie serie = new NumerosDeSerie();
+                    serie.setActivado(false);
+                    serie.setAnuladoPorReinstalacion(false);
+                    serie.setId(valor);
+                    serie.setEntidad(null);
+                    serie.setUsos(0);
+                    Date fecha= new Date();
+                    serie.setFechaIngreso(fecha);
+                    System.out.println("Numero "+serie.getId());
+                    //em.persist(serie);
+                    serviciosRest.registrarSerie(serie);
+               
+            }
+        };
+        return Response.ok(so).build();
+    }
 }

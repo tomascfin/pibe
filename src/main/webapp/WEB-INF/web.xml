@@ -11,6 +11,6 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>Jersey Servlet</servlet-name>
-        <url-pattern>/upload</url-pattern>
+        <url-pattern>/rs</url-pattern>
     </servlet-mapping>
 </web-app>

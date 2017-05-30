@@ -82,4 +82,12 @@ public class NumerosDeSerie implements Serializable {
         this.anuladoPorReinstalacion = anuladoPorReinstalacion;
     }
 
+    public Date getFechaIngreso() {
+        return fechaIngreso;
+    }
+
+    public void setFechaIngreso(Date fechaIngreso) {
+        this.fechaIngreso = fechaIngreso;
+    }
+
 }
