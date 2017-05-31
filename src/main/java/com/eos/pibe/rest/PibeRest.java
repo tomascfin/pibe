@@ -112,6 +112,28 @@ public class PibeRest {
         }
         return Response.status(Response.Status.OK).build();
     }
+    
+     @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    //@Produces(MediaType.APPLICATION_JSON)
+    @Path("activacion_pibe")
+    public Response activacionPibe(final InputStream requestBody) {
+        JsonReader cRead = Json.createReader(requestBody);
+        JsonObject entidadIngresada = cRead.readObject();
+        cRead.close();
+        Entidad entidad = em.find(Entidad.class, entidadIngresada.getString("idEntidad"));
+
+        if (entidad != null) {
+            return Response.status(Response.Status.CONFLICT).entity("Id ya existe: " + entidadIngresada.getString("idEntidad")).build();
+        }
+        try {
+            serviciosRest.registrarEntidad(entidadIngresada);
+        } catch (Exception e) {
+            System.out.println("Error de ws: " + e.getMessage());
+            Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+        return Response.status(Response.Status.OK).build();
+    }
 
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
