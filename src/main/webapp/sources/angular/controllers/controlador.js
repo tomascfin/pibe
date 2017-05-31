@@ -11,8 +11,8 @@
             .controller('ControladorFrutal', controlador);
 
 
-    controlador.$inject = ['$scope', '$log', 'ServicioWS', '$http', 'RutHelper', '$q', '$timeout', '$element', 'uiUploader'];
-    function controlador($scope, $log, ServicioWS, $http, RutHelper, $q, $timeout, $element, uiUploader) {
+    controlador.$inject = ['$scope', '$log', 'ServicioWS', '$http', 'RutHelper', '$q', '$timeout', '$element', 'uiUploader', 'uibDateParser'];
+    function controlador($scope, $log, ServicioWS, $http, RutHelper, $q, $timeout, $element, uiUploader, uibDateParser) {
         var vm = this;
         $log.error("prueba");
         vm.comunas = [];
@@ -33,12 +33,17 @@
             "telefonoContacto": null,
             "comunaId": null
         };
-
+        vm.seriesDisponibles = [];
+        vm.format = 'yyyy/MM/dd';
+        vm.date = new Date();
         vm.opcionSeleccionada = $scope.searchTerm;
+        vm.serieSeleccionada = $scope.search;
         //vm.querySearch = querySearch;
         //vm.selectedItemChange = selectedItemChange;
         //vm.searchTextChange = searchTextChange;
         $scope.direccionEntidad = "";
+        vm.entidades = [];
+        vm.identidadSeleccionada = $scope.searchEntidades;
 
         $scope.clearSearchTerm = function () {
             $log.error(vm.opcionSeleccionada);
@@ -57,7 +62,27 @@
             this.provincia = provincia;
             this.region = region;
         }
+        vm.cargarData = function(){
+            vm.obtenerSeriesDisponibles();
+            vm.obtenerEntidades();
+        };
+        vm.obtenerSeriesDisponibles = function () {
+            $log.error("entro a series disponibles controler");
+            ServicioWS.getSeriesDisponibles()
+                    .then(function (response) {
+                        vm.seriesDisponibles = response.data;
+                        $log.error(vm.seriesDisponibles);
+                    });
+        };
 
+        vm.obtenerEntidades = function () {
+
+            ServicioWS.getEntidades()
+                    .then(function (response) {
+                        vm.entidades = response.data;
+                    });
+
+        };
 
         vm.obtenerComunas = function () {
 
@@ -93,7 +118,7 @@
                     .then(function (response) {
                         return response.data;
                     }).catch(function (e) {
-                        vm.idExiste = true;
+                vm.idExiste = true;
                 $log.error('Error: ', e);
                 throw e;
             }).finally(function () {
@@ -112,10 +137,10 @@
             $log.error("entro a verificar id");
             ServicioWS.verificarIdEntidad(vm.user.rut)
                     .then(function (response) {
-                          vm.idExiste = false;
+                        vm.idExiste = false;
                         return response.data;
                     }).catch(function (e) {
-                        vm.idExiste = true;
+                vm.idExiste = true;
                 $log.error('Error: ', e);
                 throw e;
             }).finally(function () {
@@ -169,36 +194,37 @@
             };
 
         }
-        
-        /* $scope.btn_remove = function(file) {
-                    $log.info('deleting=' + file);
-                    uiUploader.removeFile(file);
-                };
-                $scope.btn_clean = function() {
-                    uiUploader.removeAll();
-                };
-                $scope.btn_upload = function() {
-                    $log.info('uploading...');
-                    uiUploader.startUpload({
-                        url: 'http://localhost:8080/pibe/ws/pibe/subir_archivo',
-                        concurrency: 2,
-                        onProgress: function(file) {
-                            $log.info(file.name + '=' + file.humanSize);
-                            $scope.$apply();
-                        },
-                        onCompleted: function(file, response) {
-                            $log.info(file + 'response' + response);
-                        }
-                    });
-                };
-                $scope.files = [];
-                var element = document.getElementById('file1');
-                element.addEventListener('change', function(e) {
-                    var files = e.target.files;
-                    uiUploader.addFiles(files);
-                    $scope.files = uiUploader.getFiles();
-                    $scope.$apply();
-                });*/
 
-    };
+        /* $scope.btn_remove = function(file) {
+         $log.info('deleting=' + file);
+         uiUploader.removeFile(file);
+         };
+         $scope.btn_clean = function() {
+         uiUploader.removeAll();
+         };
+         $scope.btn_upload = function() {
+         $log.info('uploading...');
+         uiUploader.startUpload({
+         url: 'http://localhost:8080/pibe/ws/pibe/subir_archivo',
+         concurrency: 2,
+         onProgress: function(file) {
+         $log.info(file.name + '=' + file.humanSize);
+         $scope.$apply();
+         },
+         onCompleted: function(file, response) {
+         $log.info(file + 'response' + response);
+         }
+         });
+         };
+         $scope.files = [];
+         var element = document.getElementById('file1');
+         element.addEventListener('change', function(e) {
+         var files = e.target.files;
+         uiUploader.addFiles(files);
+         $scope.files = uiUploader.getFiles();
+         $scope.$apply();
+         });*/
+
+    }
+    ;
 })();

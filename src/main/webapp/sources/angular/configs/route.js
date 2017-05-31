@@ -39,6 +39,10 @@
                     url: '/registro_series',
                     templateUrl: 'vistas/registro_series.html'
                 })
+                .state('activacion_pibe', {
+                    url: '/activacion_pibe',
+                    templateUrl: 'vistas/activacion_pibe.html'
+                })
                 .state('about', {
 
                 });
