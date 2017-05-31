@@ -6,7 +6,6 @@ com\eos\pibe\rest\PibeRest$2.class
 com\eos\pibe\rest\PibeRest$3.class
 com\eos\pibe\model\Contacto.class
 com\eos\pibe\model\Comuna.class
-com\eos\pibe\rest\PibeUpload.class
 com\eos\pibe\model\Provincia.class
 com\eos\pibe\rest\PibeRest$1.class
 com\eos\pibe\model\Provincia_.class
