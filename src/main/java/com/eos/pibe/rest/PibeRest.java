@@ -150,98 +150,95 @@ public class PibeRest {
         System.out.println(fileLocation);
         //saving file  
         try {
-            
-             File file = new File(fileLocation);
-             file.setWritable(true);
+
+            File file = new File(fileLocation);
+            file.setWritable(true);
             FileOutputStream out = new FileOutputStream(file);
-            
-             
-            
+
             int read = 0;
             byte[] bytes = new byte[1024];
             out = new FileOutputStream(new File(fileLocation));
             while ((read = uploadedInputStream.read(bytes)) != -1) {
                 out.write(bytes, 0, read);
             }
-           
-            
+
             out.flush();
             out.close();
-             escanear(fileLocation);
-            
+            escanear(fileLocation);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
         String output = "File successfully uploaded to : " + fileLocation;
         return Response.status(200).entity(output).build();
     }
-    
-    public void escanear(String file){
-     
-        try(Scanner scanner = new Scanner(new File(file))) {
-           
-            scanner.useDelimiter(",");
-        String valor = "";
-        while(scanner.hasNext()){
-           
-            
-            valor = scanner.next();
-        }
-        scanner.close();
-        
-         NumerosDeSerie serie = new NumerosDeSerie();
-                    serie.setActivado(false);
-                    serie.setAnuladoPorReinstalacion(false);
-                    serie.setId(valor);
-                    serie.setEntidad(null);
-                    serie.setUsos(0);
-                    Date fecha= new Date();
-                    serie.setFechaIngreso(fecha);
-             serviciosRest.registrarSerie(serie);
-        }catch (FileNotFoundException e){
+
+    public void escanear(String file) {
+
+        try (Scanner scanner = new Scanner(new File(file))) {
+
+            //scanner.useDelimiter(",");
+            String valor = "";
+            while (scanner.hasNext()) {
+
+                valor = scanner.next();
+                NumerosDeSerie serie = new NumerosDeSerie();
+                serie.setActivado(false);
+                serie.setAnuladoPorReinstalacion(false);
+                System.out.println("Valor--> "+valor);
+                serie.setId(valor);
+                serie.setEntidad(null);
+                serie.setUsos(0);
+                Date fecha = new Date();
+                serie.setFechaIngreso(fecha);
+                serviciosRest.registrarSerie(serie);
+            }
+            scanner.close();
+
+        } catch (FileNotFoundException e) {
 
             e.printStackTrace();
         }
     }
-    
-    public String escanear2(String file){
-     String valor = "";
-        try(Scanner scanner = new Scanner(new File(file))) {
-        scanner.useDelimiter(",");
-        while(scanner.hasNext()){
-            System.out.print(scanner.hasNextLine()+"|");
-            valor = scanner.next();
-        }
-        }catch (FileNotFoundException e){
+
+    public String escanear2(String file) {
+        String valor = "";
+        try (Scanner scanner = new Scanner(new File(file))) {
+            scanner.useDelimiter(",");
+            while (scanner.hasNext()) {
+                System.out.print(scanner.hasNextLine() + "|");
+                valor = scanner.next();
+            }
+        } catch (FileNotFoundException e) {
 
             e.printStackTrace();
         }
         return valor;
     }
-    
-     @GET
+
+    @GET
     @Path("registrar_serie")
     @Produces(MediaType.APPLICATION_JSON)
     public Response registrarSerie() {
         StreamingOutput so = new StreamingOutput() {
             @Override
             public void write(OutputStream outputStream) throws IOException, WebApplicationException {
-               
-                    String valor = "";
-                    String filename = "c://upload/prueba csv.csv";
-                    valor = escanear2(filename);
-                    NumerosDeSerie serie = new NumerosDeSerie();
-                    serie.setActivado(false);
-                    serie.setAnuladoPorReinstalacion(false);
-                    serie.setId(valor);
-                    serie.setEntidad(null);
-                    serie.setUsos(0);
-                    Date fecha= new Date();
-                    serie.setFechaIngreso(fecha);
-                    System.out.println("Numero "+serie.getId());
-                    //em.persist(serie);
-                    serviciosRest.registrarSerie(serie);
-               
+
+                String valor = "";
+                String filename = "c://upload/prueba csv.csv";
+                valor = escanear2(filename);
+                NumerosDeSerie serie = new NumerosDeSerie();
+                serie.setActivado(false);
+                serie.setAnuladoPorReinstalacion(false);
+                serie.setId(valor);
+                serie.setEntidad(null);
+                serie.setUsos(0);
+                Date fecha = new Date();
+                serie.setFechaIngreso(fecha);
+                System.out.println("Numero " + serie.getId());
+                //em.persist(serie);
+                serviciosRest.registrarSerie(serie);
+
             }
         };
         return Response.ok(so).build();
