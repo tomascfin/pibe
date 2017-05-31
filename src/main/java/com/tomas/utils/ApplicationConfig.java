@@ -20,6 +20,7 @@ public class ApplicationConfig extends Application {
         final Set<Class<?>> resources = new HashSet<>();
 
         resources.add(com.eos.pibe.rest.PibeRest.class);
+        resources.add(com.eos.pibe.rest.PibeUpload.class);
         resources.add(MultiPartFeature.class);
         //resources.add(MultiPartResource.class);
 

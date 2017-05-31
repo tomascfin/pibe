@@ -7,6 +7,7 @@ package com.eos.pibe.services;
 
 import com.eos.pibe.model.Comuna;
 import com.eos.pibe.model.Entidad;
+import com.eos.pibe.model.NumerosDeSerie;
 import com.eos.pibe.model.Provincia;
 import com.eos.pibe.model.Region;
 import java.io.OutputStream;
@@ -112,6 +113,19 @@ public class ServiciosRest {
             entidad.setTelefonoContacto(json.getString("telefonoContacto"));
             entidad.setId(json.getString("idEntidad"));
             em.persist(entidad);
+
+        } catch (Exception e) {
+            System.out.println("Error en la bd es: " + e.getMessage());
+        }
+        //entidad.setNombreContacto(json.getString("nombre contacto"));
+    }
+    
+    public void registrarSerie(NumerosDeSerie serie) {
+       
+        try {
+
+            
+            em.persist(serie);
 
         } catch (Exception e) {
             System.out.println("Error en la bd es: " + e.getMessage());
