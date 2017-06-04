@@ -13,6 +13,14 @@
                 $log.error("entro a la funcion del servicio");
             return $http.get("http://localhost:8080/pibe/ws/pibe/listar_comunas");
                };
+                vm.getSeriesDisponibles = function() {
+                $log.error("entro a la funcion del servicio");
+            return $http.get("http://localhost:8080/pibe/ws/pibe/obtener_listado_series");
+               };
+                vm.getEntidades = function() {
+                $log.error("entro a la funcion del servicio");
+            return $http.get("http://localhost:8080/pibe/ws/pibe/listar_entidades");
+               };
             vm.registrarEntidad = function(json){
                 return $http.post("http://localhost:8080/pibe/ws/pibe/registrar_entidad",json);
             };

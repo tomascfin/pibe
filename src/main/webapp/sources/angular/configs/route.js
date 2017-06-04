@@ -43,6 +43,10 @@
                     url: '/activacion_pibe',
                     templateUrl: 'vistas/activacion_pibe.html'
                 })
+                 .state('registro_reclamo', {
+                    url: '/registro_reclamo',
+                    templateUrl: 'vistas/registro_reclamo.html'
+                })
                 .state('about', {
 
                 });

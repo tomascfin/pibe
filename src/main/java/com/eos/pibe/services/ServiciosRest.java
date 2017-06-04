@@ -33,8 +33,46 @@ public class ServiciosRest {
     @PersistenceContext(unitName = "pibe_db")
     private EntityManager em;
 
-    public void obtenerListadoSeries(OutputStream ou) {
+    public void obtenerListadoSeries(OutputStream os) {
+        
+         List<NumerosDeSerie> series = em.createNamedQuery("Series.findAll").getResultList();
+         System.out.println(series.size());
+         JsonGenerator gen = Json.createGenerator(os);
+          gen.writeStartObject();
+        gen.writeStartArray("series");
+         for (NumerosDeSerie serie : series) {
+            gen.writeStartObject();
+            gen.write("id", serie.getId());
+            gen.write("usos", serie.getUsos());
+            //gen.write("nombreContacto", serie.getEntidad().getNombreContacto());
+            //gen.write("nombreEntidad", serie.getEntidad().getNombreEntidad());
+            gen.writeEnd();
+        }
+           gen.writeEnd();
+         gen.writeEnd();
+        gen.flush();
+        gen.close();
 
+    }
+    
+    public void listarEntidades(OutputStream os){
+         List<Entidad> entidades = em.createNamedQuery("Entidad.findAll").getResultList();
+         System.out.println("Entidades: " + entidades.size());
+         JsonGenerator gen = Json.createGenerator(os);
+          gen.writeStartObject();
+        gen.writeStartArray("entidades");
+         for (Entidad entidad : entidades) {
+            gen.writeStartObject();
+            gen.write("id", entidad.getId());
+            gen.write("nombreEntidad", entidad.getNombreEntidad());
+            //gen.write("nombreContacto", serie.getEntidad().getNombreContacto());
+            //gen.write("nombreEntidad", serie.getEntidad().getNombreEntidad());
+            gen.writeEnd();
+        }
+           gen.writeEnd();
+         gen.writeEnd();
+        gen.flush();
+        gen.close();
     }
 
     public void listarComunas(OutputStream os) {
@@ -167,4 +205,6 @@ public class ServiciosRest {
                 "SELECT r FROM Provincia r", Provincia.class);
         return query.getResultList();
     }
+    
+    
 }

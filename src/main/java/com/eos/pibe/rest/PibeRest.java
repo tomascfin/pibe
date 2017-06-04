@@ -73,6 +73,24 @@ public class PibeRest {
         };
         return Response.ok(so).build();
     }
+    
+    @GET
+    @Path("listar_entidades")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response listarEntidades() {
+        StreamingOutput so = new StreamingOutput() {
+            @Override
+            public void write(OutputStream outputStream) throws IOException, WebApplicationException {
+                try {
+                    serviciosRest.listarEntidades(outputStream);
+                } catch (Exception e) {
+                    System.out.println("Error en listar entidades: " + e.getMessage());
+                }
+            }
+        };
+        return Response.ok(so).build();
+    }
+    
 
     @GET
     @Path("listar_comunas")
