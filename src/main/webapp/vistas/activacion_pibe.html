@@ -23,14 +23,13 @@
     </ui-select>
   
   <label>Usos</label>
-  <input type="number">
+  <input type="number" ng-model="ctlr.activacionUsos">
   <label>Ordend de compra</label>
   <input type="text">
   
-  <label>Activar</label>
-  <input type="submit">
+
+  <button ng-click="ctlr.activarPibe()">Activar</button>
   
-  {{ctlr.serieSeleccionada.id}}-
-  {{ctlr.entidades}}
+  {{ctlr.activacion}}
  
 </div>

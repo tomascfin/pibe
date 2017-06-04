@@ -23,6 +23,7 @@
         vm.comunasLimpio = [];
         vm.comunasFinales = vm.comunas;
         $scope.searchTerm;
+        vm.activacionUsos = "";
         vm.idExiste = false;
         vm.entidad = {
             "idEntidad": null,
@@ -32,6 +33,15 @@
             "nombreEntidad": null,
             "telefonoContacto": null,
             "comunaId": null
+        };
+        vm.activacion = {
+            "idSerie": null,
+            "idEntidad": null,
+            "usos": null,
+            "idEjecutivo": null,
+            "fechaActivacion": null,
+            "observacion": null,
+            "ordenDeCompra": null
         };
         vm.seriesDisponibles = [];
         vm.format = 'yyyy/MM/dd';
@@ -62,7 +72,7 @@
             this.provincia = provincia;
             this.region = region;
         }
-        vm.cargarData = function(){
+        vm.cargarData = function () {
             vm.obtenerSeriesDisponibles();
             vm.obtenerEntidades();
         };
@@ -149,7 +159,32 @@
         };
 
 
+        vm.activarPibe = function () {
+            vm.fecha = new Date(2017, 5, 1);
+            $log.error("entro a activar pibe")
+            vm.activacion.idSerie = vm.serieSeleccionada.id,
+                    vm.activacion.idEntidad = vm.identidadSeleccionada.id,
+                    vm.activacion.usos = vm.activacionUsos,
+                    vm.activacion.idEjecutivo = "prueba",
+                    vm.activacion.fechaActivacion = vm.fecha,
+                    vm.activacion.observacion = "observacion de prueba",
+                    vm.activacion.ordenDeCompra = "orden de prueba";
 
+            $log.error(vm.activacion);
+
+            ServicioWS.activarPibe(JSON.stringify(vm.activacion))
+                    .then(function (response) {
+                        return response.data;
+                    }).catch(function (e) {
+                vm.idExiste = true;
+                $log.error('Error: ', e);
+                throw e;
+            }).finally(function () {
+                $log.error('This finally block');
+            });
+
+
+        };
 
 
         vm.loadAll = function () {

@@ -12,6 +12,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
+import javax.persistence.Temporal;
 import javax.persistence.Version;
 
 @Entity
@@ -37,6 +38,7 @@ public class NumerosDeSerie implements Serializable {
     private boolean anuladoPorReinstalacion = false;
     
     @Column(name = "fecha_ingreso", nullable = false)
+    @Temporal(javax.persistence.TemporalType.DATE)
     private Date fechaIngreso;
 
     public NumerosDeSerie() {

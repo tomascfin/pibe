@@ -9,7 +9,7 @@ import com.eos.pibe.model.Entidad;
 import com.eos.pibe.model.NumerosDeSerie;
 import com.eos.pibe.services.ServiciosRest;
 import com.sun.jersey.core.header.FormDataContentDisposition;
-import com.sun.jersey.multipart.FormDataParam;
+//import com.sun.jersey.multipart.FormDataParam;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -29,6 +29,8 @@ import javax.json.JsonReader;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaUpdate;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -42,6 +44,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.StreamingOutput;
 import org.eclipse.persistence.jpa.jpql.parser.DateTime;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 
 /**
  *
@@ -131,7 +134,7 @@ public class PibeRest {
         return Response.status(Response.Status.OK).build();
     }
     
-     @POST
+    @POST
     @Consumes(MediaType.APPLICATION_JSON)
     //@Produces(MediaType.APPLICATION_JSON)
     @Path("activacion_pibe")
@@ -139,13 +142,27 @@ public class PibeRest {
         JsonReader cRead = Json.createReader(requestBody);
         JsonObject entidadIngresada = cRead.readObject();
         cRead.close();
+        
         Entidad entidad = em.find(Entidad.class, entidadIngresada.getString("idEntidad"));
-
-        if (entidad != null) {
+        NumerosDeSerie serie = em.find(NumerosDeSerie.class, entidadIngresada.getString("idSerie"));
+        System.out.println("usos que habia "+ serie.getUsos());
+         System.out.println("el nombre de la entidad es: "+entidad.getNombreEntidad());
+        /*if (entidad != null) {
             return Response.status(Response.Status.CONFLICT).entity("Id ya existe: " + entidadIngresada.getString("idEntidad")).build();
-        }
+        }*/
         try {
-            serviciosRest.registrarEntidad(entidadIngresada);
+            Date fecha = new Date();
+            //CriteriaBuilder cb = em.getCriteriaBuilder();
+        //CriteriaUpdate<NumerosDeSerie> updateCriteria = cb.createCriteriaUpdate(NumerosDeSerie.class);
+            int usos = serie.getUsos() + entidadIngresada.getInt("usos");
+            System.out.println("usos: "+usos);
+            serie.setActivado(true);
+            serie.setEntidad(entidad);
+            //serie.setFechaIngreso(new Date(entidadIngresada.getString("fechaActivacion")));
+            serie.setFechaIngreso(fecha);
+            serie.setUsos(usos);
+            //em.merge(serie);
+            //serviciosRest.registrarEntidad(entidadIngresada);
         } catch (Exception e) {
             System.out.println("Error de ws: " + e.getMessage());
             Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
