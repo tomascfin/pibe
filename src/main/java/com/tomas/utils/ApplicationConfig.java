@@ -10,7 +10,11 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
-import org.glassfish.jersey.media.multipart.MultiPartFeature;
+//import org.glassfish.jersey.media.multipart.MultiPartFeature;
+//import org.glassfish.jersey.media.multipart.MultiPartFeature;
+//import org.glassfish.jersey.media.multipart.MultiPartFeature;
+//import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+//import org.glassfish.jersey.media.multipart.FormDataParam;
 
 @ApplicationPath("ws") // set the path to REST web services
 public class ApplicationConfig extends Application {
@@ -20,9 +24,12 @@ public class ApplicationConfig extends Application {
         final Set<Class<?>> resources = new HashSet<>();
 
         resources.add(com.eos.pibe.rest.PibeRest.class);
+          // Add your resources.
+        //resources.add(UploadFileService.class);
+
+        // Add additional features such as support for Multipart.
+       // resources.add(MultiPartFeature.class);
         //resources.add(com.eos.pibe.rest.PibeUpload.class);
-        resources.add(MultiPartFeature.class);
-        //resources.add(MultiPartResource.class);
 
         return resources;
     }

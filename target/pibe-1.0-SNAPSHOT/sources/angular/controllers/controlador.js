@@ -65,7 +65,9 @@
             ev.stopPropagation();
         });
 
-
+        vm.prueba = function(){
+          $log.error("prueba");  
+        };
         function comunaObjeto(value, display, provincia, region) {
             this.value = value;
             this.display = display;

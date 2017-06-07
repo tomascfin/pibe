@@ -47,6 +47,15 @@
                     url: '/registro_reclamo',
                     templateUrl: 'vistas/registro_reclamo.html'
                 })
+                  .state('ampliacion', {
+                    url: '/ampliacion',
+                    templateUrl: 'vistas/ampliacion.html'
+                })
+                 .state('calendario', {
+                    url: '/calendario',
+                    templateUrl: 'vistas/calendario.html',
+                    controller: 'calendario'
+                })
                 .state('about', {
 
                 });

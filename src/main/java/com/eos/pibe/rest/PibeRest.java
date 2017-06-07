@@ -8,7 +8,8 @@ package com.eos.pibe.rest;
 import com.eos.pibe.model.Entidad;
 import com.eos.pibe.model.NumerosDeSerie;
 import com.eos.pibe.services.ServiciosRest;
-import com.sun.jersey.core.header.FormDataContentDisposition;
+//import com.sun.jersey.core.header.FormDataContentDisposition;
+//import com.sun.jersey.multipart.FormDataParam;
 //import com.sun.jersey.multipart.FormDataParam;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -29,8 +30,6 @@ import javax.json.JsonReader;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaUpdate;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -44,7 +43,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.StreamingOutput;
 import org.eclipse.persistence.jpa.jpql.parser.DateTime;
-import org.glassfish.jersey.media.multipart.FormDataParam;
+//import org.glassfish.jersey.media.multipart.FormDataParam;
+//import org.glassfish.jersey.media.multipart.FormDataParam;
 
 /**
  *
@@ -54,7 +54,7 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 @Stateless
 public class PibeRest {
 
-    @EJB
+    @Inject
     ServiciosRest serviciosRest;
 
     @PersistenceContext(unitName = "pibe_db")
@@ -196,12 +196,13 @@ public class PibeRest {
         return Response.status(Response.Status.OK).build();
     }
 
-    @POST
+    /*@POST
     @Path("upload")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response uploadFile(
-            @FormDataParam("file") InputStream uploadedInputStream,
-            @FormDataParam("file") FormDataContentDisposition fileDetail) {
+        @DefaultValue("true") @FormDataParam("enabled") boolean enabled,
+        @FormDataParam("file") InputStream uploadedInputStream,
+        @FormDataParam("file") FormDataContentDisposition fileDetail) {
         System.out.println("Entroa  ws upload");
         String fileLocation = "c://upload/" + fileDetail.getFileName();
         System.out.println(fileLocation);
@@ -229,7 +230,7 @@ public class PibeRest {
         String output = "File successfully uploaded to : " + fileLocation;
         return Response.status(200).entity(output).build();
     }
-
+*/
     public void escanear(String file) {
 
         try (Scanner scanner = new Scanner(new File(file))) {
@@ -296,6 +297,23 @@ public class PibeRest {
                 //em.persist(serie);
                 serviciosRest.registrarSerie(serie);
 
+            }
+        };
+        return Response.ok(so).build();
+    }
+    
+    @GET
+    @Path("listar_agendamientos")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response listarAgendamientos() {
+        StreamingOutput so = new StreamingOutput() {
+            @Override
+            public void write(OutputStream outputStream) throws IOException, WebApplicationException {
+                try {
+                    serviciosRest.listarAgendamienetos(outputStream);
+                } catch (Exception e) {
+                    System.out.println("Error en listar comunas: " + e.getMessage());
+                }
             }
         };
         return Response.ok(so).build();

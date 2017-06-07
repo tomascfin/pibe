@@ -5,13 +5,19 @@
  */
 package com.eos.pibe.services;
 
+import com.eos.pibe.model.Agendamiento;
 import com.eos.pibe.model.Comuna;
 import com.eos.pibe.model.Entidad;
 import com.eos.pibe.model.NumerosDeSerie;
 import com.eos.pibe.model.Provincia;
 import com.eos.pibe.model.Region;
 import java.io.OutputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.json.Json;
@@ -22,6 +28,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import org.joda.time.DateTime;
 
 /**
  *
@@ -34,13 +41,13 @@ public class ServiciosRest {
     private EntityManager em;
 
     public void obtenerListadoSeries(OutputStream os) {
-        
-         List<NumerosDeSerie> series = em.createNamedQuery("Series.findAll").getResultList();
-         System.out.println(series.size());
-         JsonGenerator gen = Json.createGenerator(os);
-          gen.writeStartObject();
+
+        List<NumerosDeSerie> series = em.createNamedQuery("Series.findAll").getResultList();
+        System.out.println(series.size());
+        JsonGenerator gen = Json.createGenerator(os);
+        gen.writeStartObject();
         gen.writeStartArray("series");
-         for (NumerosDeSerie serie : series) {
+        for (NumerosDeSerie serie : series) {
             gen.writeStartObject();
             gen.write("id", serie.getId());
             gen.write("usos", serie.getUsos());
@@ -48,20 +55,20 @@ public class ServiciosRest {
             //gen.write("nombreEntidad", serie.getEntidad().getNombreEntidad());
             gen.writeEnd();
         }
-           gen.writeEnd();
-         gen.writeEnd();
+        gen.writeEnd();
+        gen.writeEnd();
         gen.flush();
         gen.close();
 
     }
-    
-    public void listarEntidades(OutputStream os){
-         List<Entidad> entidades = em.createNamedQuery("Entidad.findAll").getResultList();
-         System.out.println("Entidades: " + entidades.size());
-         JsonGenerator gen = Json.createGenerator(os);
-          gen.writeStartObject();
+
+    public void listarEntidades(OutputStream os) {
+        List<Entidad> entidades = em.createNamedQuery("Entidad.findAll").getResultList();
+        System.out.println("Entidades: " + entidades.size());
+        JsonGenerator gen = Json.createGenerator(os);
+        gen.writeStartObject();
         gen.writeStartArray("entidades");
-         for (Entidad entidad : entidades) {
+        for (Entidad entidad : entidades) {
             gen.writeStartObject();
             gen.write("id", entidad.getId());
             gen.write("nombreEntidad", entidad.getNombreEntidad());
@@ -69,8 +76,8 @@ public class ServiciosRest {
             //gen.write("nombreEntidad", serie.getEntidad().getNombreEntidad());
             gen.writeEnd();
         }
-           gen.writeEnd();
-         gen.writeEnd();
+        gen.writeEnd();
+        gen.writeEnd();
         gen.flush();
         gen.close();
     }
@@ -87,25 +94,25 @@ public class ServiciosRest {
         gen.writeStartObject();
         gen.writeStartArray("Comunas");
         for (Comuna comuna : comunas2) {
-             gen.writeStartObject();
+            gen.writeStartObject();
             gen.write("display", comuna.getNombreCiudad());
-            gen.write("value" , comuna.getId());
+            gen.write("value", comuna.getId());
             gen.write("provincia", comuna.getProvincia().getNombreProvincia());
             gen.write("region", comuna.getProvincia().getRegion().getNombreRegion());
-            
-           /* gen.writeStartArray("");
+
+            /* gen.writeStartArray("");
             gen.writeStartObject();
             gen.write("nombre", comuna.getNombreCiudad());
             gen.write("id", comuna.getId());*/
 
-/*            Query query = em.createQuery("SELECT p FROM Provincia p WHERE p.comuna = :comuna");
+ /*            Query query = em.createQuery("SELECT p FROM Provincia p WHERE p.comuna = :comuna");
             query.setParameter("comuna", comuna.getId());
             Provincia provincia2 = (Provincia) query.getSingleResult();
             System.out.println(provincia2.getNombreProvincia());*/
             gen.writeEnd();
         }
         gen.writeEnd();
-         gen.writeEnd();
+        gen.writeEnd();
         gen.flush();
         gen.close();
         /*gen.writeStartObject();
@@ -134,7 +141,66 @@ public class ServiciosRest {
         gen.writeEnd();
         gen.flush();
         gen.close();
-*/
+         */
+    }
+
+    public void listarAgendamienetos(OutputStream os) {
+        List<Agendamiento> agendamientos = em.createNamedQuery("Agendamiento.findAll").getResultList();
+        System.out.println("Entro a service");
+        String inicio = "";
+        String fin = "";
+         JsonGenerator gen = Json.createGenerator(os);
+             gen.writeStartObject();
+             gen.writeStartArray("events");
+        
+        for (Agendamiento agendamiento : agendamientos) {
+            inicio = agendamiento.getInicioFecha().toString();
+            fin = agendamiento.getFinFecha().toString();
+            System.out.println(inicio);
+
+            //Date date = agendamiento.getInicioFecha();
+            /*Calendar calendar = Calendar.getInstance(); // creates a new calendar instance
+            calendar.setTime(date);   // assigns calendar to given date 
+            System.out.println(calendar.get(Calendar.HOUR_OF_DAY)); // gets hour in 24h format
+            System.out.println(calendar.get(Calendar.HOUR));        // gets hour in 12h format
+            System.out.println(calendar.get(Calendar.MINUTE));
+            System.out.println(calendar.get(Calendar.MONTH));*/
+             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+             
+              //Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z").parse();
+             /*java.util.Date utilDate = new java.util.Date();
+             try{
+                 utilDate = sdf.parse(agendamiento.getInicioFecha().toString());
+             }catch(ParseException pe){
+                 pe.printStackTrace();
+             }*/
+             
+             DateTime fecha = new DateTime(agendamiento.getInicioFecha());
+             int y = fecha.getYear();
+             int m = fecha.getMonthOfYear();
+             int d = fecha.getDayOfMonth();
+             int hour = fecha.getHourOfDay();
+             int minute = fecha.getMinuteOfHour();
+             System.out.println("y->"+y+"m->"+m+"d->"+d+"hour->"+hour+"minute->"+minute);
+             
+           
+             
+             gen.writeStartObject();
+             gen.write("id", agendamiento.getId());
+             gen.write("title", agendamiento.getNombre());
+             gen.write("start", sdf.format(agendamiento.getInicioFecha()));
+             gen.write("end", sdf.format(agendamiento.getFinFecha()));
+             gen.write("detalle", "este agendamiento tiene detalles");
+             gen.writeEnd();
+             
+            
+
+        }
+         gen.writeEnd();
+             gen.writeEnd();
+             gen.flush();
+             gen.close();
+
     }
 
     public void registrarEntidad(JsonObject json) {
@@ -157,12 +223,11 @@ public class ServiciosRest {
         }
         //entidad.setNombreContacto(json.getString("nombre contacto"));
     }
-    
+
     public void registrarSerie(NumerosDeSerie serie) {
-       
+
         try {
 
-            
             em.persist(serie);
 
         } catch (Exception e) {
@@ -205,6 +270,5 @@ public class ServiciosRest {
                 "SELECT r FROM Provincia r", Provincia.class);
         return query.getResultList();
     }
-    
-    
+
 }
