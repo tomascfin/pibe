@@ -15,6 +15,7 @@
     function controlador($scope, $log, ServicioWS, $http, RutHelper, $q, $timeout, $element, uiUploader, uibDateParser) {
         var vm = this;
         $log.error("prueba");
+        vm.duracion = 45;
         vm.comunas = [];
         vm.comunasFinales = [];
         vm.isDisabled = false;
@@ -25,6 +26,7 @@
         $scope.searchTerm;
         vm.activacionUsos = "";
         vm.idExiste = false;
+        vm.duraciones = [15, 30, 45, 60];
         vm.entidad = {
             "idEntidad": null,
             "direccion": null,
@@ -307,8 +309,8 @@
                     //vm.agendamiento.fechaAgendamiento = $scope.mytime;
                     vm.agendamiento.fechaAgendamiento = moment(vm.fecha).format('YYYY-MM-DD'),
                     //vm.agendamiento.inicioHorario = $scope.mytime.toISOString(),
-            vm.agendamiento.inicioHorario = moment(vm.fecha).format('YYYY-MM-DD HH:mm:ss.SSSSSS'),
-                    vm.agendamiento.finHorario = moment(vm.fecha).minutes(45).format('YYYY-MM-DD HH:mm:ss.SSSSSS'),
+                    vm.agendamiento.inicioHorario = moment(vm.fecha).format('YYYY-MM-DD HH:mm:ss.SSSSSS'),
+                    vm.agendamiento.finHorario = moment(vm.fecha).minutes(vm.duracion).format('YYYY-MM-DD HH:mm:ss.SSSSSS'),
                     vm.agendamiento.fechaPrueba = moment(vm.fecha).format('YYYY-MM-DD HH:mm:ss.SSSSSS');
                      $log.error(vm.fecha);
             

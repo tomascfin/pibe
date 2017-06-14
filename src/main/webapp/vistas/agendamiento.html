@@ -1,5 +1,5 @@
 <style>
-    
+
 </style>
 
 <div class="bg-light lter b-b wrapper-md" >
@@ -7,7 +7,7 @@
 </div>
 <div class="wrapper-md" ng-controller="ControladorFrutal as ctlr" ng-init="ctlr.cargarData()">
     <div class="row">
-        <div class="col-sm-6">
+        <div class="col-sm-4">
             <div class="panel panel-default">
                 <div class="panel-heading font-bold">Agendamiento</div>
                 <div class="panel-body">
@@ -29,8 +29,23 @@
                             <input type="text" class="form-control" placeholder="Detalle agendamiento" ng-model="ctlr.agendar.detalleContacto">
                         </div>
                         <div class="form-group">
+                            <label>Duracion</label>
+                            <ui-select ng-model="ctlr.duracion"
+                                       theme="bootstrap"
+                                       ng-disabled="ctrl.disabled"
+                                       reset-search-input="true"
+                                       title="Duracion">
+                                <ui-select-match placeholder="Duracion agenda">{{ctlr.duracion}}</ui-select-match>
+                                <ui-select-choices repeat="dur in ctlr.duraciones"
+                                                   
+                                                   refresh-delay="0">
+                                    <div ng-bind-html="dur"></div>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                        <div class="form-group">
                             <label>Selecciona una entidad</label>
-                            <ui-select ng-model="ctlr.identidadSeleccionada" theme="selectize" style="width: 300px;" title="Choose a person">
+                            <ui-select ng-model="ctlr.identidadSeleccionada" theme="selectize"  title="Choose a person">
                                 <ui-select-match placeholder="Seleciona una entidad">{{ctlr.identidadSeleccionada.nombreEntidad}}</ui-select-match>
                                 <ui-select-choices  repeat="item in ctlr.entidades.entidades | filter: $select.search"  >
                                     <div ng-bind-html="item.nombreEntidad | highlight: $select.search"></div>
@@ -42,7 +57,7 @@
                             </ui-select>
                         </div>
                         <div class="form-group">
-                             <label>Seleccion fecha y hora</label>
+                            <label>Seleccion fecha y hora</label>
                             <p class="input-group">
                                 <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="dt" is-open="popup1.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" />
                                 <span class="input-group-btn">
@@ -50,21 +65,21 @@
                                 </span>
                             </p>
 
-                           <div uib-timepicker ng-model="mytime" ng-change="changed()" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></div>
+                            <div uib-timepicker ng-model="mytime" ng-change="changed()" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></div>
                         </div>
                         <button type="submit" ng-click="ctlr.agendar()" class="btn btn-sm btn-primary">Ingresar</button>
                         <button type="submit" ng-click="ctlr.crearFecha()" class="btn btn-sm btn-primary">Ingresar</button>
-                       
+
                     </form>
                 </div>
-                
-                      
+
+
             </div>
-              
+
         </div>
         <div class="col-md-6">
-             <div class="alert alert-success" role="alert" ng-hide="ctlr.ocultarMensaje">Agendamiento ingresado con exito</div>
+            <div class="alert alert-success" role="alert" ng-hide="ctlr.ocultarMensaje">Agendamiento ingresado con exito</div>
         </div>
-        
+
     </div>
 </div>
