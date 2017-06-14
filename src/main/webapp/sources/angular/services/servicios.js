@@ -24,6 +24,10 @@
             vm.registrarEntidad = function(json){
                 return $http.post("http://localhost:8080/pibe/ws/pibe/registrar_entidad",json);
             };
+             vm.registrarAgendamiento = function(json){
+                 $log.error("agendamiento");
+                return $http.post("http://localhost:8080/pibe/ws/pibe/registrar_agendamiento",json);
+            };
              vm.verificarIdEntidad = function(id) {
                 $log.error("entro a la funcion del servicio");
             return $http.get("http://localhost:8080/pibe/ws/pibe/verficar_id_entidad?id_entidad="+id);

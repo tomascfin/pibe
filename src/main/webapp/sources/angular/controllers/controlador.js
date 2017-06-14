@@ -43,6 +43,21 @@
             "observacion": null,
             "ordenDeCompra": null
         };
+        vm.agendamiento = {
+            "idEntidad": null,
+            "detalleAgendamiento" : null,
+            "emailAgendamiento": null,
+            "nombreContacto": null,
+            "telefonoContacto": null,
+            "fechaAgendamiento" : null,
+            "inicioHorario" : null,
+            "fechaPrueba": null
+        };
+        vm.agendar =[];
+        vm.agendar.nombreContacto = "";
+        vm.agendar.telefonoContacto= "";
+        vm.agendar.emailContacto = "";
+        vm.agendar.detalleContacto = "";
         vm.seriesDisponibles = [];
         vm.format = 'yyyy/MM/dd';
         vm.date = new Date();
@@ -65,8 +80,8 @@
             ev.stopPropagation();
         });
 
-        vm.prueba = function(){
-          $log.error("prueba");  
+        vm.prueba = function () {
+            $log.error("prueba");
         };
         function comunaObjeto(value, display, provincia, region) {
             this.value = value;
@@ -232,6 +247,83 @@
 
         }
 
+        $scope.mytime = new Date();
+
+        $scope.hstep = 1;
+        $scope.mstep = 15;
+
+        $scope.options = {
+            hstep: [1, 2, 3],
+            mstep: [1, 5, 10, 15, 25, 30]
+        };
+
+        $scope.ismeridian = true;
+        $scope.toggleMode = function () {
+            $scope.ismeridian = !$scope.ismeridian;
+        };
+
+        $scope.update = function () {
+            var d = new Date();
+            d.setHours(14);
+            d.setMinutes(0);
+            $scope.mytime = d;
+        };
+
+        $scope.changed = function () {
+            $log.log('Time changed to: ' + $scope.mytime);
+        };
+
+        $scope.clear = function () {
+            $scope.mytime = null;
+        };
+        
+        vm.crearFecha = function(){
+            //vm.fecha = new Date();
+           
+            $log.error(vm.fecha);
+        };
+        
+        vm.fecha1 = "";
+         vm.agendar = function () {
+            $log.error("entra a funcion agendar");
+           
+            vm.fecha = $scope.dt;
+            
+          
+            vm.fecha.setHours($scope.mytime.getHours());
+            vm.fecha.setMinutes($scope.mytime.getMinutes());
+            vm.fecha.setSeconds(0);
+            vm.fecha.setMilliseconds(0);
+          
+            $log.error(moment(vm.fecha).format('YYYY-MM-DD hh:mm:ss'));
+            
+                    vm.agendamiento.detalleAgendamiento =  vm.agendar.detalleContacto,
+                    vm.agendamiento.idEntidad = vm.identidadSeleccionada.id,
+                    vm.agendamiento.emailAgendamiento = vm.agendar.emailContacto,
+                    vm.agendamiento.nombreContacto = vm.agendar.nombreContacto,
+                    vm.agendamiento.telefonoContacto = vm.agendar.telefonoContacto,
+                    //vm.agendamiento.fechaAgendamiento = $scope.mytime;
+                    vm.agendamiento.fechaAgendamiento = moment(vm.fecha).format('YYYY-MM-DD'),
+                    //vm.agendamiento.inicioHorario = $scope.mytime.toISOString(),
+            vm.agendamiento.inicioHorario = moment(vm.fecha).format('YYYY-MM-DD HH:mm:ss.SSSSSS'),
+                    vm.agendamiento.fechaPrueba = moment(vm.fecha).format('YYYY-MM-DD HH:mm:ss.SSSSSS');
+                     $log.error(vm.fecha);
+            
+            $log.error(vm.agendamiento);
+
+            ServicioWS.registrarAgendamiento(JSON.stringify(vm.agendamiento))
+                    .then(function (response) {
+                        return response.data;
+                    }).catch(function (e) {
+                //vm.idExiste = true;
+                $log.error('Error: ', e);
+                throw e;
+            }).finally(function () {
+                $log.error('This finally block');
+            });
+
+
+        };
         /* $scope.btn_remove = function(file) {
          $log.info('deleting=' + file);
          uiUploader.removeFile(file);

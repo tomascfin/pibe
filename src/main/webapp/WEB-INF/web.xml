@@ -19,5 +19,5 @@
         <servlet-name>Jersey Servlet</servlet-name>
         <url-pattern>/ws</url-pattern>
     </servlet-mapping>-->
-    
+  
 </web-app>

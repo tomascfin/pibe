@@ -1,0 +1,62 @@
+<style>
+    
+</style>
+
+<div class="bg-light lter b-b wrapper-md" >
+    <h1 class="m-n font-thin h3"></h1>
+</div>
+<div class="wrapper-md" ng-controller="ControladorFrutal as ctlr" ng-init="ctlr.cargarData()">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="panel panel-default">
+                <div class="panel-heading font-bold">Agendamiento</div>
+                <div class="panel-body">
+                    <form role="form">
+                        <div class="form-group">
+                            <label>Nombre contacto</label>
+                            <input type="text" class="form-control" placeholder="Nombre contacto" ng-model="ctlr.agendar.nombreContacto">
+                        </div>
+                        <div class="form-group">
+                            <label>Telefono contacto</label>
+                            <input type="text" class="form-control" placeholder="Telefono contacto" ng-model="ctlr.agendar.telefonoContacto">
+                        </div>
+                        <div class="form-group">
+                            <label>Email contacto</label>
+                            <input type="email" class="form-control" placeholder="Email contacto" ng-model="ctlr.agendar.emailContacto">
+                        </div>
+                        <div class="form-group">
+                            <label>Detalle agendamiento</label>
+                            <input type="text" class="form-control" placeholder="Detalle agendamiento" ng-model="ctlr.agendar.detalleContacto">
+                        </div>
+                        <div class="form-group">
+                            <label>Selecciona una entidad</label>
+                            <ui-select ng-model="ctlr.identidadSeleccionada" theme="selectize" style="width: 300px;" title="Choose a person">
+                                <ui-select-match placeholder="Seleciona una entidad">{{ctlr.identidadSeleccionada.nombreEntidad}}</ui-select-match>
+                                <ui-select-choices  repeat="item in ctlr.entidades.entidades | filter: $select.search"  >
+                                    <div ng-bind-html="item.nombreEntidad | highlight: $select.search"></div>
+                                    <small>
+                                        entidad {{item.nombreEntidad}}
+                                        region: <span ng-bind-html="item.id | highlight: $select.search"></span>
+                                    </small>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                        <div class="form-group">
+                             <label>Seleccion fecha y hora</label>
+                            <p class="input-group">
+                                <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="dt" is-open="popup1.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" />
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
+                                </span>
+                            </p>
+
+                           <div uib-timepicker ng-model="mytime" ng-change="changed()" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></div>
+                        </div>
+                        <button type="submit" ng-click="ctlr.agendar()" class="btn btn-sm btn-primary">Ingresar</button>
+                        <button type="submit" ng-click="ctlr.crearFecha()" class="btn btn-sm btn-primary">Ingresar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

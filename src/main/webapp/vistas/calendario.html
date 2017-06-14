@@ -1,31 +1,57 @@
-<div ng-controller="calendario as ctlr" ng-init="ctlr.obtenerEventos()">
+<div ng-controller="calendario as ctlr" ng-init="ctlr.obtenerEventos(); changeLang()">
     <div class="row">
         <div class="col-md-5">
+            Nombre eventp : {{prueba.title}}
+            <br>
+            Detalle evento : {{prueba.detalle}}
+            <br>
+            <div class="row">
+      <div class="col-md-6">
+        <p class="input-group">
+          <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="dt" is-open="popup1.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" />
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
+          </span>
+        </p>
+        
+         <div uib-timepicker ng-model="mytime" ng-change="changed()" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></div>
+
+      </div>
+
+      <div class="col-md-6">
+        <p class="input-group">
+          <input type="text" class="form-control" uib-datepicker-popup ng-model="dt" is-open="popup2.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="open2()"><i class="glyphicon glyphicon-calendar"></i></button>
+          </span>
+        </p>
+         <div uib-timepicker ng-model="mytime" ng-change="changed()" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></div>
+
+      </div>
+    </div>
+        </div>
+        <div class="col-md-7">
      <tabset>
                             <tab select="renderCalendar('myCalendar1')">
                               <tab-heading>
-                               <i class="glyphicon glyphicon-bell"></i> Calendar One
+                               <i class="glyphicon glyphicon-bell"></i> Calendario Agendamiento
                               </tab-heading>
                               <div class="alert-success calAlert" ng-show="alertMessage != undefined && alertMessage != ''">
                                 <h4>{{alertMessage}}</h4>
                               </div>
                               <div class="btn-toolbar">
-                                <p class="pull-right lead">Calendar One View Options</p>
+                                <p class="pull-right lead">Opciones</p>
                                 <div class="btn-group">
-                                    <button class="btn btn-success" ng-click="changeView('agendaDay', 'myCalendar1')">AgendaDay</button>
-                                    <button class="btn btn-success" ng-click="changeView('agendaWeek', 'myCalendar1')">AgendaWeek</button>
-                                    <button class="btn btn-success" ng-click="changeView('month', 'myCalendar1')">Month</button>
+                                    <button class="btn btn-success" ng-click="changeView('agendaDay', 'myCalendar1')">Diario</button>
+                                    <button class="btn btn-success" ng-click="changeView('agendaWeek', 'myCalendar1')">Semanal</button>
+                                    <button class="btn btn-success" ng-click="changeView('month', 'myCalendar1')">Mensual</button>
                                 </div>
                               </div>
-                            <div class="calendar" ng-model="eventSources" calendar="myCalendar1" ui-calendar="uiConfig.calendar"></div>
+                            <div class="calendario" ng-model="eventSources" calendar="myCalendar1" ui-calendar="uiConfig.calendar"></div>
                            </tab>
                         </tabset>
     </div>
-        <div class="col-md-5">
-            Nombre eventp : {{prueba.title}}
-            <br>
-            Detalle evento : {{prueba.detalle}}
-        </div>
+        
    </div>
     
    
