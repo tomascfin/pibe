@@ -51,9 +51,11 @@
             "telefonoContacto": null,
             "fechaAgendamiento" : null,
             "inicioHorario" : null,
-            "fechaPrueba": null
+            "fechaPrueba": null,
+            "finHorario" : null
         };
         vm.agendar =[];
+        vm.ocultarMensaje = true;
         vm.agendar.nombreContacto = "";
         vm.agendar.telefonoContacto= "";
         vm.agendar.emailContacto = "";
@@ -306,13 +308,15 @@
                     vm.agendamiento.fechaAgendamiento = moment(vm.fecha).format('YYYY-MM-DD'),
                     //vm.agendamiento.inicioHorario = $scope.mytime.toISOString(),
             vm.agendamiento.inicioHorario = moment(vm.fecha).format('YYYY-MM-DD HH:mm:ss.SSSSSS'),
+                    vm.agendamiento.finHorario = moment(vm.fecha).minutes(45).format('YYYY-MM-DD HH:mm:ss.SSSSSS'),
                     vm.agendamiento.fechaPrueba = moment(vm.fecha).format('YYYY-MM-DD HH:mm:ss.SSSSSS');
                      $log.error(vm.fecha);
             
             $log.error(vm.agendamiento);
 
             ServicioWS.registrarAgendamiento(JSON.stringify(vm.agendamiento))
-                    .then(function (response) {
+                    .then(function (response, status) {
+                        vm.ocultarMensaje = false;
                         return response.data;
                     }).catch(function (e) {
                 //vm.idExiste = true;
