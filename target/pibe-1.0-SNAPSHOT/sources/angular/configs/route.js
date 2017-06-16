@@ -56,6 +56,15 @@
                     templateUrl: 'vistas/calendario.html',
                     controller: 'calendario'
                 })
+                .state('tabla_series', {
+                    url: '/tabla_series',
+                    templateUrl: 'vistas/tabla_series.html'
+                })
+                  .state('agendamiento', {
+                    url: '/agendamiento',
+                    templateUrl: 'vistas/agendamiento.html',
+                    controller: 'calendario'
+                })
                 .state('about', {
 
                 });

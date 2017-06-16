@@ -6,6 +6,7 @@
 package com.eos.pibe.model;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -45,9 +46,8 @@ public class Reclamo implements Serializable {
     @Column(length = 64, name = "ruta_archivo", nullable = false)
     private String rutaArchivo;
     @Column(name = "fecha_reclamo", nullable = false)
-    @Temporal(javax.persistence.TemporalType.DATE)
-    private Date fechaReclamo;
-
+    private java.sql.Timestamp fechaReclamo;
+    
     public Reclamo() {
     }
 
@@ -115,13 +115,15 @@ public class Reclamo implements Serializable {
         this.rutaArchivo = rutaArchivo;
     }
 
-    public Date getFechaReclamo() {
+    public Timestamp getFechaReclamo() {
         return fechaReclamo;
     }
 
-    public void setFechaReclamo(Date fechaReclamo) {
+    public void setFechaReclamo(Timestamp fechaReclamo) {
         this.fechaReclamo = fechaReclamo;
     }
+
+
     
     
 }

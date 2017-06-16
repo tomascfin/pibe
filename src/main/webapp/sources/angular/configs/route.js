@@ -37,7 +37,7 @@
                 })
                 .state('registro_series', {
                     url: '/registro_series',
-                    templateUrl: 'vistas/registro_series.jsp'
+                    templateUrl: 'vistas/registro_series.html'
                 })
                 .state('activacion_pibe', {
                     url: '/activacion_pibe',
@@ -55,6 +55,10 @@
                     url: '/calendario',
                     templateUrl: 'vistas/calendario.html',
                     controller: 'calendario'
+                })
+                .state('tabla_series', {
+                    url: '/tabla_series',
+                    templateUrl: 'vistas/tabla_series.html'
                 })
                   .state('agendamiento', {
                     url: '/agendamiento',

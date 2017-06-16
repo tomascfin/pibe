@@ -11,13 +11,15 @@ import javax.persistence.Column;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Temporal;
 import javax.persistence.Version;
 
 @Entity
 @Table(name = "numero_de_series", schema = "public")
-@NamedQuery(name = "Series.findAll", query = "SELECT s FROM NumerosDeSerie s WHERE s.activado = false")
+@NamedQueries({@NamedQuery(name = "Series.findAll", query = "SELECT s FROM NumerosDeSerie s WHERE s.activado =:activado"),
+@NamedQuery(name = "Series.findByEntidad", query = "SELECT s FROM NumerosDeSerie s WHERE s.entidad = :valor")})
 public class NumerosDeSerie implements Serializable {
 
     @Id
