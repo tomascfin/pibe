@@ -23,6 +23,8 @@
         $scope.searchTerm;
         vm.activacionUsos = "";
         vm.idExiste = false;
+        vm.tipoActivacion = "Activacion";
+        vm.tipoActivaciones = ["Activacion", "Reinstalacion"];
         vm.duraciones = [15, 30, 45, 60];
         vm.tipoAgendamientos = ["Activacion", "Ampliacion", "Reinstalacion", "Reclamo", "Otro"];
         vm.tipoAgendamiento = "";
@@ -42,8 +44,9 @@
             "idEjecutivo": null,
             "fechaActivacion": null,
             "observacion": null,
-            "ordenDeCompra": null
-        };
+            "ordenDeCompra": null,
+            "tipoActivacion" : null
+          };
         vm.agendamiento = {
             "idEntidad": null,
             "detalleAgendamiento": null,
@@ -223,6 +226,7 @@
                     vm.activacion.fechaActivacion = vm.fecha,
                     vm.activacion.observacion = "observacion de prueba",
                     vm.activacion.ordenDeCompra = "orden de prueba";
+                    vm.activacion.tipoActivacion = vm.tipoActivacion;
 
             $log.error(vm.activacion);
 
@@ -393,7 +397,7 @@
          $scope.$apply();
          });*/
 
-         $scope.btn_remove = function(file) {
+        /* $scope.btn_remove = function(file) {
          $log.info('deleting=' + file);
          uiUploader.removeFile(file);
          };
@@ -421,8 +425,8 @@
          uiUploader.addFiles(files);
          $scope.files = uiUploader.getFiles();
          $scope.$apply();
-         });
-        var today = new Date();
+         });*/
+       /* var today = new Date();
         var nextWeek = new Date();
         nextWeek.setDate(nextWeek.getDate() + 7);
 
@@ -524,7 +528,7 @@
         $scope.toggleFiltering = function () {
             $scope.gridOptions.enableFiltering = !$scope.gridOptions.enableFiltering;
             $scope.gridApi.core.notifyDataChange(uiGridConstants.dataChange.COLUMN);
-        }
+        }*/
     }
     ;
 

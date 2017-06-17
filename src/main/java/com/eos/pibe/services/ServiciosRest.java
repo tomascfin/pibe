@@ -8,6 +8,7 @@ package com.eos.pibe.services;
 import com.eos.pibe.model.Agendamiento;
 import com.eos.pibe.model.Comuna;
 import com.eos.pibe.model.Entidad;
+import com.eos.pibe.model.MovimientoSeries;
 import com.eos.pibe.model.NumerosDeSerie;
 import com.eos.pibe.model.Provincia;
 import com.eos.pibe.model.Region;
@@ -50,15 +51,15 @@ public class ServiciosRest {
         List<NumerosDeSerie> series = null;
         Entidad entidad = em.find(Entidad.class, idEntidad);
         if (idEntidad.equals("") || idEntidad.equals("undefined")) {
-             series = em.createNamedQuery("Series.findAll")
-                .setParameter("activado", bool)
-                .getResultList();
-        }else{
+            series = em.createNamedQuery("Series.findAll")
+                    .setParameter("activado", bool)
+                    .getResultList();
+        } else {
             series = em.createNamedQuery("Series.findByEntidad")
-                .setParameter("valor", entidad)
-                .getResultList();
+                    .setParameter("valor", entidad)
+                    .getResultList();
         }
-       
+
         JsonGenerator gen = Json.createGenerator(os);
         gen.writeStartObject();
         gen.writeStartArray("series");
@@ -74,11 +75,12 @@ public class ServiciosRest {
         gen.close();
 
     }
-    
-    public void ampliarSeries(OutputStream os, JsonObject json){
-         NumerosDeSerie serie = em.find(NumerosDeSerie.class, json.getString("idSerie"));
-         serie.setUsos(serie.getUsos() + json.getJsonNumber("usos").intValue());
-         em.merge(serie);
+
+    public void ampliarSeries(OutputStream os, JsonObject json) {
+        NumerosDeSerie serie = em.find(NumerosDeSerie.class, json.getString("idSerie"));
+        serie.setUsos(serie.getUsos() + json.getJsonNumber("usos").intValue());
+        em.merge(serie);
+        registrarMovimientoSeries(serie.getEntidad(), serie, json.getJsonNumber("usos").intValue(), "Ampliacion");
     }
 
     public void listarEntidades(OutputStream os) {
@@ -100,7 +102,6 @@ public class ServiciosRest {
 
     public void listarComunas(OutputStream os) {
 
-        
         //Collections.sort(comunas, (Comuna p1, Comuna p2) -> p1.getNombreCiudad().compareTo(p2.getNombreCiudad()));
         JsonGenerator gen = Json.createGenerator(os);
         List<Comuna> comunas = obtenerComunas(em);
@@ -211,17 +212,36 @@ public class ServiciosRest {
         }
         //entidad.setNombreContacto(json.getString("nombre contacto"));
     }
-    
-    public void eliminarAgendamiento(Long id){
+
+    public void eliminarAgendamiento(Long id) {
         Agendamiento agendamiento = em.find(Agendamiento.class, id);
-           try {
+        try {
 
             if (agendamiento != null) {
-                       em.remove(agendamiento); 
-                    }
+                em.remove(agendamiento);
+            }
 
         } catch (Exception e) {
             System.out.println("Error en la bd es: " + e.getMessage());
+        }
+    }
+
+    public void registrarMovimientoSeries(Entidad entidad, NumerosDeSerie serie, int usos, String tipo) {
+
+        try {
+
+            MovimientoSeries movimientoSeries = new MovimientoSeries();
+            movimientoSeries.setDetalleMovimiento("pruebas");
+            movimientoSeries.setEntidad(entidad);
+            movimientoSeries.setTipoMovimiento(tipo);
+            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+            movimientoSeries.setFechaMovimiento(timestamp);
+            movimientoSeries.setNumeroDeSerie(serie);
+            movimientoSeries.setUsos(usos);
+            em.persist(movimientoSeries);
+
+        } catch (PersistenceException e) {
+            System.out.println("Error en el ingreso: " + e.getMessage());
         }
     }
 

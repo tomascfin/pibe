@@ -28,6 +28,22 @@
   <input type="text">
   
 
+                            <label>Tipo Activacion</label>
+                            <ui-select ng-model="ctlr.tipoActivacion"
+                                       style="width: 300px;"
+                                       theme="bootstrap"
+                                       ng-disabled="ctrl.disabled"
+                                       reset-search-input="true"
+                                       title="Duracion">
+                                <ui-select-match placeholder="">{{ctlr.tipoActivacion}}</ui-select-match>
+                                <ui-select-choices repeat="tipo in ctlr.tipoActivaciones"
+                                                   
+                                                   refresh-delay="0">
+                                    <div ng-bind-html="tipo"></div>
+                                </ui-select-choices>
+                            </ui-select>
+                      
+
   <button ng-click="ctlr.activarPibe()">Activar</button>
   
   {{ctlr.activacion}}

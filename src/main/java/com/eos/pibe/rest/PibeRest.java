@@ -7,6 +7,7 @@ package com.eos.pibe.rest;
 
 import com.eos.pibe.model.Agendamiento;
 import com.eos.pibe.model.Entidad;
+import com.eos.pibe.model.MovimientoSeries;
 import com.eos.pibe.model.NumerosDeSerie;
 import com.eos.pibe.services.ServiciosRest;
 //import com.sun.jersey.core.header.FormDataContentDisposition;
@@ -18,6 +19,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -204,6 +206,8 @@ public class PibeRest {
             //serie.setFechaIngreso(new Date(entidadIngresada.getString("fechaActivacion")));
             serie.setFechaIngreso(fecha);
             serie.setUsos(usos);
+            
+            serviciosRest.registrarMovimientoSeries(entidad, serie, usos, entidadIngresada.getString("tipoActivacion"));
             //em.merge(serie);
             //serviciosRest.registrarEntidad(entidadIngresada);
         } catch (Exception e) {

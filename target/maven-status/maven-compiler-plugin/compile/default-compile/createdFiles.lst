@@ -12,13 +12,16 @@ com\eos\pibe\model\Agendamiento_.class
 com\eos\pibe\model\Agendamiento.class
 com\eos\pibe\restUpload\JerseyService.class
 com\eos\pibe\jobs\SimpleTriggerExample$1.class
+com\eos\pibe\jobs\FechaTest.class
 com\eos\pibe\jobs\HelloQuartzListener.class
 com\eos\pibe\services\ServiciosRest.class
 com\eos\pibe\rest\PibeRest$7.class
 com\eos\pibe\model\Region.class
 com\eos\pibe\model\Entidad.class
 com\eos\pibe\rest\PibeRest$2.class
+com\eos\pibe\model\MovimientoSeries.class
 com\eos\pibe\rest\PibeRest$3.class
+com\eos\pibe\model\MovimientoSeries_.class
 com\eos\pibe\model\Activacion.class
 com\eos\pibe\jobs\SimpleTriggerExample.class
 com\eos\pibe\rest\PibeRest$1.class
