@@ -65,6 +65,10 @@
                     templateUrl: 'vistas/agendamiento.html',
                     controller: 'calendario'
                 })
+                 .state('grafico', {
+                    url: '/grafico',
+                    templateUrl: 'vistas/grafico.html'
+                })
                 .state('about', {
 
                 });

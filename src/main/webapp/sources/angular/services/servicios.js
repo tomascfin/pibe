@@ -43,6 +43,10 @@
                 $log.error("entro a la funcion del servicio");
             return $http.get("http://localhost:8080/pibe/ws/pibe/eliminar_agendamiento?id="+id);
                };
+               vm.listarDetalleSeries = function(id) {
+                $log.error("entro a la funcion del servicio");
+            return $http.get("http://localhost:8080/pibe/ws/pibe/listar_series_detalle");
+               };
                vm.activarPibe = function(json) {
                 $log.error("entro a la funcion del servicio");
             return $http.post("http://localhost:8080/pibe/ws/pibe/activacion_pibe", json);
