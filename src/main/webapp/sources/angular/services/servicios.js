@@ -21,6 +21,9 @@
                 $log.error("entro a la funcion del servicio");
             return $http.get("http://localhost:8080/pibe/ws/pibe/listar_entidades");
                };
+               vm.contadorReclamos = function() {
+            return $http.get("http://localhost:8080/pibe/ws/pibe/contador_reclamos");
+               };
             vm.registrarEntidad = function(json){
                 return $http.post("http://localhost:8080/pibe/ws/pibe/registrar_entidad",json);
             };
@@ -31,9 +34,16 @@
                  $log.error("agendamiento");
                 return $http.post("http://localhost:8080/pibe/ws/pibe/registrar_agendamiento",json);
             };
+             vm.ingresarReclamo = function(json){
+                 $log.error("agendamiento");
+                return $http.post("http://localhost:8080/pibe/ws/pibe/ingresar_reclamo",json);
+            };
              vm.verificarIdEntidad = function(id) {
                 $log.error("entro a la funcion del servicio");
             return $http.get("http://localhost:8080/pibe/ws/pibe/verficar_id_entidad?id_entidad="+id);
+               };
+                vm.listarReclamos = function(tipo) {
+            return $http.get("http://localhost:8080/pibe/ws/pibe/listar_reclamos2?tipo="+tipo);
                };
                 vm.getEvents = function(id) {
                 $log.error("entro a la funcion del servicio");

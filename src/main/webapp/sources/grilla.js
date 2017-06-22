@@ -18,6 +18,7 @@
         vm.prueba = function(objeto){
             $log.error(objeto);
         }
+        //cellTemplate:'<button ng-click="grid.appScope.ctlr.prueba(row.entity)">Ver detalles</button>'}
         $scope.gridOptions = {
             enableFiltering: true,
             columnDefs: [
@@ -25,7 +26,9 @@
                 {field: 'usos'},
                 {field: 'establecimiento'},
                 {field: 'boton',
-                    cellTemplate:'<button ng-click="grid.appScope.ctlr.prueba(row.entity)">Click Here</button>'}
+                    enableFiltering: false,
+                    cellTemplate:'<button><a ui-sref="detalle_serie({serieId: row.entity.numeroDeSerie})">Ver detalles</a></button>'}
+                
             ],
             enableGridMenu: true,
             enableSelectAll: true,

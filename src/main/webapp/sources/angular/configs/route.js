@@ -43,15 +43,15 @@
                     url: '/activacion_pibe',
                     templateUrl: 'vistas/activacion_pibe.html'
                 })
-                 .state('registro_reclamo', {
+                .state('registro_reclamo', {
                     url: '/registro_reclamo',
                     templateUrl: 'vistas/registro_reclamo.html'
                 })
-                  .state('ampliacion', {
+                .state('ampliacion', {
                     url: '/ampliacion',
                     templateUrl: 'vistas/ampliacion.html'
                 })
-                 .state('calendario', {
+                .state('calendario', {
                     url: '/calendario',
                     templateUrl: 'vistas/calendario.html',
                     controller: 'calendario'
@@ -60,17 +60,25 @@
                     url: '/tabla_series',
                     templateUrl: 'vistas/tabla_series.html'
                 })
-                  .state('agendamiento', {
+                .state('agendamiento', {
                     url: '/agendamiento',
                     templateUrl: 'vistas/agendamiento.html',
                     controller: 'calendario'
                 })
-                 .state('grafico', {
+                .state('reclamos', {
+                    reloadOnSearch: false,
+                    url: '/reclamos',
+                    templateUrl: 'vistas/reclamos.html'
+                })
+                .state('grafico', {
                     url: '/grafico',
                     templateUrl: 'vistas/grafico.html'
                 })
+                .state('detalle_serie', {
+                    url: '/detalle_serie/:serieId',
+                    templateUrl: 'vistas/detalle_serie.html'
+                })
                 .state('about', {
-
                 });
     }
     ;

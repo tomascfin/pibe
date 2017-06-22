@@ -13,8 +13,8 @@
             var fusioncharts = new FusionCharts({
                 type: 'column2d',
                 renderAt: 'chart-container',
-                width: '500',
-                height: '300',
+                width: '1000',
+                height: '600',
                 dataFormat: 'json',
                 dataSource: {
                     "chart": {

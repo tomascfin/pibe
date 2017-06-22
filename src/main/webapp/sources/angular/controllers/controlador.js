@@ -18,6 +18,7 @@
         vm.ampliacionUsos = 0;
         vm.ordenDeCompra = "";
         vm.user = [];
+        vm.reclamos = [];
         vm.comunasLimpio = [];
         vm.comunasFinales = vm.comunas;
         $scope.searchTerm;
@@ -93,6 +94,22 @@
         $element.find('input').on('keydown', function (ev) {
             ev.stopPropagation();
         });
+        vm.clickTab = function(id){
+            $log.error("tab");
+            $log.error(id);
+        };
+        function Reclamo(detalleReclamo, emailContacto, nombreContacto, numeroContacto, prioridad,  tipoReclamo, idEntidad){
+            this.id = null,
+            this.detalleReclamo = detalleReclamo,
+            this.emailContacto = emailContacto,
+            this.nombreContacto = nombreContacto,
+            this.numeroContacto = numeroContacto,
+            this.prioridad = prioridad,
+            this.rutaArchivo = null,
+            this.tipoReclamo = tipoReclamo,
+            this.idEntidad = idEntidad
+            
+        };
 
         vm.prueba = function () {
             $log.error("prueba");
@@ -112,6 +129,20 @@
         vm.cargarData2 = function (bool) {
             $log.error(bool);
             vm.obtenerEntidades();
+        };
+        
+        vm.ingresarReclamo = function(){
+            
+          var object = new Reclamo(vm.reclamos.detalleReclamo, vm.reclamos.emailContacto, vm.reclamos.nombreContacto, vm.reclamos.numeroContacto, vm.reclamos.prioridad, vm.reclamos.tipoReclamo, vm.identidadSeleccionada.id);;
+            ServicioWS.ingresarReclamo(object)
+                    .then(function (response) {
+                        return response.data;
+                    }).catch(function (e) {
+                $log.error('Error: ', e);
+                throw e;
+            }).finally(function () {
+                $log.error('This finally block');
+            });
         };
 
         vm.ampliarPibe = function () {
