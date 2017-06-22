@@ -1,0 +1,15 @@
+ .highPriority,
+  .highPriority div,
+  .highPriority span {
+    background-color: red; /* background color */
+    border-color: white;     /* border color */
+    color: white;           /* text color */
+  }
+  
+   .lowPriority,
+  .lowPriority div,
+  .lowPriority span {
+    background-color: blue; /* background color */
+    border-color: white;     /* border color */
+    color: white;           /* text color */
+  }

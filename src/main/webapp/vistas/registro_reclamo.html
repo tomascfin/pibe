@@ -1,0 +1,42 @@
+<div ng-controller = "ControladorFrutal as ctlr" ng-init="ctlr.cargarData()">
+    <form>
+        <div class="form-group">
+            <label >Selecciona entidad</label>
+            <ui-select ng-model="ctlr.identidadSeleccionada" theme="selectize" style="width: 300px;" title="Choose a person">
+                <ui-select-match placeholder="Seleciona una entidad">{{ctlr.identidadSeleccionada.nombreEntidad}}</ui-select-match>
+                <ui-select-choices  repeat="item in ctlr.entidades.entidades | filter: $select.search"  >
+                    <div ng-bind-html="item.nombreEntidad | highlight: $select.search"></div>
+                    <small>
+
+                        ID: <span ng-bind-html="item.id | highlight: $select.search"></span>
+                    </small>
+                </ui-select-choices>
+            </ui-select>
+        </div>
+        <div class="form-group">
+            <label for="detalle">Detalle reclamo</label>
+            <input type="text" class="form-control" id="detalle" ng-model="ctlr.reclamos.detalleReclamo">
+        </div>
+        <div class="form-group">
+            <label for="nombre_contacto">Nombre contacto</label>
+            <input type="text" class="form-control" id="nombre_contacto" ng-model="ctlr.reclamos.nombreContacto">
+        </div>
+        <div class="form-group">
+            <label for="numero_contacto">Numero contacto</label>
+            <input type="text" class="form-control" id="numero_contacto" ng-model="ctlr.reclamos.numeroContacto">
+        </div>
+        <div class="form-group">
+            <label for="email_contacto">Email contacto</label>
+            <input type="email" class="form-control" id="email_contacto" ng-model="ctlr.reclamos.emailContacto">
+        </div>
+        <div class="form-group">
+            <label for="prioridad">Prioridad</label>
+            <input type="number" class="form-control" id="prioridad" ng-model="ctlr.reclamos.prioridad">
+        </div>
+         <div class="form-group">
+            <label for="tipo">Tipo Reclamo</label>
+            <input type="text" class="form-control" id="tipo" ng-model="ctlr.reclamos.tipoReclamo">
+        </div>
+        <button type="submit" class="btn btn-default" ng-click="ctlr.ingresarReclamo()">Registrar reclamo</button>
+    </form>
+</div>

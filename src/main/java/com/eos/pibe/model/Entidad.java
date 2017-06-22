@@ -14,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
@@ -22,6 +23,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "entidad", schema = "public")
+@NamedQuery(name = "Entidad.findAll", query = "SELECT e FROM Entidad e")
 public class Entidad implements Serializable {
     
         @Id

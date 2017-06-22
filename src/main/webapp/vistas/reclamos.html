@@ -1,0 +1,18 @@
+<div ng-controller="reclamosController as ctlr" ng-init="ctlr.contadorReclamos() ; ctlr.datos('1')">
+   
+    <ul class="nav nav-tabs">
+        <li class="active"><a href data-toggle="tab" data-target="#tab_1" ng-click="ctlr.datos('1')">Abiertos <span class="badge badge-sm m-l-xs">{{ctlr.reclamo.abierto}}</span></a></li>
+        <li><a href data-toggle="tab" data-target="#tab_1" ng-click="ctlr.datos('2')">En progreso <span class="badge bg-primary badge-sm m-l-xs">{{ctlr.reclamo.enProgreso}}</span></a></li>
+        <li><a href data-toggle="tab" data-target="#tab_1" ng-click="ctlr.datos('3')">Finalizados <span class="badge bg-success badge-sm m-l-xs">{{ctlr.reclamo.finalizado}}</span></a></li>
+    </ul>
+
+    <div class="tab-content" >
+        <div class="tab-pane active" id="tab_1" ng-hide="ctlr.ocultarGrid1" >
+            <div external-scopes="clickHandler" ui-grid="gridOptions"  ui-grid-selection ui-grid-exporter ui-grid-pagination class="grid"></div>
+        </div>
+      
+    </div>
+        <button type="button" class="btn btn-default" ng-click="ctlr.open()">Open me!</button>
+        {{ctlr.foo}}
+    
+</div>

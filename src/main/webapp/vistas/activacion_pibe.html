@@ -1,0 +1,51 @@
+<div ng-controller="ControladorFrutal as ctlr" ng-init="ctlr.cargarData('false')">
+  
+  
+    <label>Numero de serie disponible</label>
+    <ui-select ng-model="ctlr.serieSeleccionada" theme="selectize"  style="width: 300px;" title="Selecciona comuna" >
+    <ui-select-match placeholder="Selecciona una serie">{{ctlr.serieSeleccionada.id}}</ui-select-match>
+    <ui-select-choices repeat="item in ctlr.seriesDisponibles.series  | filter: $select.search">
+      <span ng-bind-html="item.id | highlight: $select.search"></span>
+    </ui-select-choices>
+  </ui-select>
+  
+  
+  <label>Selecciona una entidad</label>
+    <ui-select ng-model="ctlr.identidadSeleccionada" theme="selectize" style="width: 300px;" title="Choose a person">
+    <ui-select-match placeholder="Seleciona una entidad">{{ctlr.identidadSeleccionada.nombreEntidad}}</ui-select-match>
+    <ui-select-choices  repeat="item in ctlr.entidades.entidades | filter: $select.search"  >
+      <div ng-bind-html="item.nombreEntidad | highlight: $select.search"></div>
+      <small>
+        entidad {{item.nombreEntidad}}
+        region: <span ng-bind-html="item.id | highlight: $select.search"></span>
+      </small>
+    </ui-select-choices>
+    </ui-select>
+  
+  <label>Usos</label>
+  <input type="number" ng-model="ctlr.activacionUsos">
+  <label>Ordend de compra</label>
+  <input type="text">
+  
+
+                            <label>Tipo Activacion</label>
+                            <ui-select ng-model="ctlr.tipoActivacion"
+                                       style="width: 300px;"
+                                       theme="bootstrap"
+                                       ng-disabled="ctrl.disabled"
+                                       reset-search-input="true"
+                                       title="Duracion">
+                                <ui-select-match placeholder="">{{ctlr.tipoActivacion}}</ui-select-match>
+                                <ui-select-choices repeat="tipo in ctlr.tipoActivaciones"
+                                                   
+                                                   refresh-delay="0">
+                                    <div ng-bind-html="tipo"></div>
+                                </ui-select-choices>
+                            </ui-select>
+                      
+
+  <button ng-click="ctlr.activarPibe()">Activar</button>
+  
+  {{ctlr.activacion}}
+ 
+</div>

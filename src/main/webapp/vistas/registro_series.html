@@ -1,5 +1,25 @@
-<form method="POST" action="http://localhost:8080/pibe/ws/pibe/upload" enctype="multipart/form-data">
-    <input type="file" name="file">
-    <input type="submit" value="Upload">
-    
-</form>
+<div id="uploader" ng-controller="ControladorUpload">
+   
+            <div class="row">
+                
+                <div class="col-md-6">
+                    <p>Carga masiva de numeros de serie.</p>
+
+                    <div class="well">
+                        <div>
+                            <div style="float:right;">
+                                <button ng-click="btn_upload()">Subir</button>
+                                <button ng-click="btn_clean()">Remover todo</button>
+                            </div>
+                            <input type="file" id="file1" />
+                        </div>
+                        <div ng-repeat="file in files" style="margin-top: 20px;border-bottom-color: antiquewhite;border-bottom-style: double;">
+                            <div><span>{{file.name}}</span><div style="float:right;"><span>{{file.humanSize}}</span><a ng-click="btn_remove(file)" title="Remove from list to be uploaded"><i class="icon-remove"></i></a></div>
+                            </div>
+                            <progress style="width:400px;" value="{{file.loaded ? file.loaded : 0}}" max="{{file.size}}"></progress>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>

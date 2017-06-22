@@ -1,0 +1,64 @@
+<div ng-controller="calendario as ctlr" ng-init="ctlr.obtenerEventos(); changeLang()">
+    <div class="row">
+        <div class="col-md-5">
+            <div class="angulr row">
+         <div class="panel-heading font-bold">Agendamiento</div>
+         <div class="panel-body">
+             <form role="form">
+                  <div class="form-group">
+                            <label>Detalle contacto</label>
+                            <input type="text" class="form-control" value="{{prueba.title}}" disabled="">
+                        </div>
+                        <div class="form-group">
+                            <label>Nombre contacto</label>
+                            <input type="text" class="form-control"  value="{{prueba.nombreContacto}}" disabled>
+                        </div>
+                 <div class="form-group">
+                            <label>Telefono contacto</label>
+                            <input type="text" class="form-control"  value="{{prueba.telefonoContacto}}" disabled>
+                        </div>
+                 <div class="form-group">
+                            <label>Email contacto</label>
+                            <input type="text" class="form-control"  value="{{prueba.emailContacto}}" disabled>
+                        </div>
+                  <div class="form-group">
+                            <label>Nombre establecimiento</label>
+                            <input type="text" class="form-control"  value="{{prueba.nombreEstablecimiento}}" disabled>
+                        </div>
+                  <div class="form-group">
+                            
+                      <button class="button danger" ng-click="ctlr.eliminiarAgendamiento(prueba.id)">Eliminar</button> <button class="button danger">Modificar horario</button>
+                        </div>
+             </form>
+            
+         </div>
+           
+    </div>
+       
+        </div>
+        <div class="col-md-7">
+     <tabset>
+                            <tab select="renderCalendar('myCalendar1')">
+                              <tab-heading>
+                               <i class="glyphicon glyphicon-bell"></i> Calendario Agendamiento
+                              </tab-heading>
+                              <!--<div class="alert-success calAlert" ng-show="alertMessage != undefined && alertMessage != ''">
+                                <h4>{{alertMessage}}</h4>
+                              </div>-->
+                              <div class="btn-toolbar">
+                                <p class="pull-right lead">Opciones</p>
+                                <div class="btn-group">
+                                    <button class="btn btn-success" ng-click="changeView('agendaDay', 'myCalendar1')">Diario</button>
+                                    <button class="btn btn-success" ng-click="changeView('agendaWeek', 'myCalendar1')">Semanal</button>
+                                    <button class="btn btn-success" ng-click="changeView('month', 'myCalendar1')">Mensual</button>
+                                </div>
+                              </div>
+                            <div class="calendario" ng-model="eventSources" calendar="myCalendar1" ui-calendar="uiConfig.calendar"></div>
+                           </tab>
+                        </tabset>
+    </div>
+        
+   </div>
+    
+   
+</div>

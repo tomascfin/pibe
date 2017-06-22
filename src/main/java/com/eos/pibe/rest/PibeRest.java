@@ -5,17 +5,21 @@
  */
 package com.eos.pibe.rest;
 
+import com.eos.pibe.model.Agendamiento;
 import com.eos.pibe.model.Entidad;
+import com.eos.pibe.model.MovimientoSeries;
 import com.eos.pibe.model.NumerosDeSerie;
 import com.eos.pibe.services.ServiciosRest;
-import com.sun.jersey.core.header.FormDataContentDisposition;
-import com.sun.jersey.multipart.FormDataParam;
+//import com.sun.jersey.core.header.FormDataContentDisposition;
+//import com.sun.jersey.multipart.FormDataParam;
+//import com.sun.jersey.multipart.FormDataParam;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -29,6 +33,7 @@ import javax.json.JsonReader;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -42,6 +47,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.StreamingOutput;
 import org.eclipse.persistence.jpa.jpql.parser.DateTime;
+//import org.glassfish.jersey.media.multipart.FormDataParam;
+//import org.glassfish.jersey.media.multipart.FormDataParam;
 
 /**
  *
@@ -51,7 +58,7 @@ import org.eclipse.persistence.jpa.jpql.parser.DateTime;
 @Stateless
 public class PibeRest {
 
-    @EJB
+    @Inject
     ServiciosRest serviciosRest;
 
     @PersistenceContext(unitName = "pibe_db")
@@ -60,12 +67,14 @@ public class PibeRest {
     @GET
     @Path("obtener_listado_series")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response prueba() {
+    public Response prueba(@DefaultValue("true")@QueryParam("activado") final boolean bool,
+            @DefaultValue("")@QueryParam("valor") final String idEntidad) {
         StreamingOutput so = new StreamingOutput() {
             @Override
             public void write(OutputStream outputStream) throws IOException, WebApplicationException {
                 try {
-                    serviciosRest.obtenerListadoSeries(outputStream);
+                    System.out.println("bollean :"+bool);
+                    serviciosRest.obtenerListadoSeries(outputStream, bool, idEntidad);
                 } catch (Exception e) {
                     System.out.println("Error en listar series: " + e.getMessage());
                 }
@@ -73,6 +82,45 @@ public class PibeRest {
         };
         return Response.ok(so).build();
     }
+    
+    @GET
+    @Path("listar_entidades")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response listarEntidades() {
+        StreamingOutput so = new StreamingOutput() {
+            @Override
+            public void write(OutputStream outputStream) throws IOException, WebApplicationException {
+                try {
+                    serviciosRest.listarEntidades(outputStream);
+                } catch (Exception e) {
+                    System.out.println("Error en listar entidades: " + e.getMessage());
+                }
+            }
+        };
+        return Response.ok(so).build();
+    }
+    
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("ampliar_series")
+    public Response ampliarSeries(final InputStream requestBody) {
+        JsonReader cRead = Json.createReader(requestBody);
+        final JsonObject numeroDeSerie = cRead.readObject();
+        cRead.close();
+        
+        StreamingOutput so = new StreamingOutput() {
+            @Override
+            public void write(OutputStream outputStream) throws IOException, WebApplicationException {
+                try {
+                    serviciosRest.ampliarSeries(outputStream, numeroDeSerie);
+                } catch (Exception e) {
+                    System.out.println("Error en listar entidades: " + e.getMessage());
+                }
+            }
+        };
+        return Response.ok(so).build();
+    }
+    
 
     @GET
     @Path("listar_comunas")
@@ -113,7 +161,25 @@ public class PibeRest {
         return Response.status(Response.Status.OK).build();
     }
     
-     @POST
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    //@Produces(MediaType.APPLICATION_JSON)
+    @Path("registrar_agendamiento")
+    public Response registroAgendamiento(final InputStream requestBody) {
+        JsonReader cRead = Json.createReader(requestBody);
+        JsonObject agendamientoJson = cRead.readObject();
+        cRead.close();
+      
+        try {
+            serviciosRest.registrarAgendamiento(agendamientoJson);
+        } catch (Exception e) {
+            System.out.println("Error de ws: " + e.getMessage());
+            Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+        return Response.status(Response.Status.OK).build();
+    }
+    
+    @POST
     @Consumes(MediaType.APPLICATION_JSON)
     //@Produces(MediaType.APPLICATION_JSON)
     @Path("activacion_pibe")
@@ -121,13 +187,29 @@ public class PibeRest {
         JsonReader cRead = Json.createReader(requestBody);
         JsonObject entidadIngresada = cRead.readObject();
         cRead.close();
+        
         Entidad entidad = em.find(Entidad.class, entidadIngresada.getString("idEntidad"));
-
-        if (entidad != null) {
+        NumerosDeSerie serie = em.find(NumerosDeSerie.class, entidadIngresada.getString("idSerie"));
+        System.out.println("usos que habia "+ serie.getUsos());
+         System.out.println("el nombre de la entidad es: "+entidad.getNombreEntidad());
+        /*if (entidad != null) {
             return Response.status(Response.Status.CONFLICT).entity("Id ya existe: " + entidadIngresada.getString("idEntidad")).build();
-        }
+        }*/
         try {
-            serviciosRest.registrarEntidad(entidadIngresada);
+            Date fecha = new Date();
+            //CriteriaBuilder cb = em.getCriteriaBuilder();
+        //CriteriaUpdate<NumerosDeSerie> updateCriteria = cb.createCriteriaUpdate(NumerosDeSerie.class);
+            int usos = serie.getUsos() + entidadIngresada.getInt("usos");
+            System.out.println("usos: "+usos);
+            serie.setActivado(true);
+            serie.setEntidad(entidad);
+            //serie.setFechaIngreso(new Date(entidadIngresada.getString("fechaActivacion")));
+            serie.setFechaIngreso(fecha);
+            serie.setUsos(usos);
+            
+            serviciosRest.registrarMovimientoSeries(entidad, serie, usos, entidadIngresada.getString("tipoActivacion"));
+            //em.merge(serie);
+            //serviciosRest.registrarEntidad(entidadIngresada);
         } catch (Exception e) {
             System.out.println("Error de ws: " + e.getMessage());
             Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
@@ -161,42 +243,8 @@ public class PibeRest {
         return Response.status(Response.Status.OK).build();
     }
 
-    @POST
-    @Path("upload")
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public Response uploadFile(
-            @FormDataParam("file") InputStream uploadedInputStream,
-            @FormDataParam("file") FormDataContentDisposition fileDetail) {
-        System.out.println("Entroa  ws upload");
-        String fileLocation = "c://upload/" + fileDetail.getFileName();
-        System.out.println(fileLocation);
-        //saving file  
-        try {
-
-            File file = new File(fileLocation);
-            file.setWritable(true);
-            FileOutputStream out = new FileOutputStream(file);
-
-            int read = 0;
-            byte[] bytes = new byte[1024];
-            out = new FileOutputStream(new File(fileLocation));
-            while ((read = uploadedInputStream.read(bytes)) != -1) {
-                out.write(bytes, 0, read);
-            }
-
-            out.flush();
-            out.close();
-            escanear(fileLocation);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        String output = "File successfully uploaded to : " + fileLocation;
-        return Response.status(200).entity(output).build();
-    }
-
     public void escanear(String file) {
-
+        System.out.println("Entro a escanear");
         try (Scanner scanner = new Scanner(new File(file))) {
 
             //scanner.useDelimiter(",");
@@ -239,6 +287,23 @@ public class PibeRest {
     }
 
     @GET
+    @Path("eliminar_agendamiento")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response eliminarAgendamiento(@QueryParam("id") final Long id) {
+        StreamingOutput so = new StreamingOutput() {
+            @Override
+            public void write(OutputStream outputStream) throws IOException, WebApplicationException {
+
+                
+               serviciosRest.eliminarAgendamiento(id);
+            }
+        };
+        return Response.ok(so).build();
+    }
+    
+    
+    
+    @GET
     @Path("registrar_serie")
     @Produces(MediaType.APPLICATION_JSON)
     public Response registrarSerie() {
@@ -261,6 +326,23 @@ public class PibeRest {
                 //em.persist(serie);
                 serviciosRest.registrarSerie(serie);
 
+            }
+        };
+        return Response.ok(so).build();
+    }
+    
+    @GET
+    @Path("listar_agendamientos")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response listarAgendamientos() {
+        StreamingOutput so = new StreamingOutput() {
+            @Override
+            public void write(OutputStream outputStream) throws IOException, WebApplicationException {
+                try {
+                    serviciosRest.listarAgendamienetos(outputStream);
+                } catch (Exception e) {
+                    System.out.println("Error en listar comunas: " + e.getMessage());
+                }
             }
         };
         return Response.ok(so).build();
