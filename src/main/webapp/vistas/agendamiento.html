@@ -2,95 +2,100 @@
 
 
 <div class="wrapper-md" ng-controller="ControladorFrutal as ctlr" ng-init="ctlr.cargarData()">
-    <div class="angulr row">
-        <div class="col-sm-4">
+    <div class="row">
+        <div class="col-sm-6 angulr row">
             <div class="panel panel-default">
                 <div class="panel-heading font-bold">Agendamiento</div>
                 <div class="panel-body">
                     <form role="form">
-                        <div class="form-group">
-                            <label>Nombre contacto</label>
-                            <input type="text" class="form-control" ng-model="ctlr.agendar.nombreContacto">
-                        </div>
-                        <div class="form-group">
-                            <label>Telefono contacto</label>
-                            <input type="text" class="form-control"  ng-model="ctlr.agendar.telefonoContacto">
-                        </div>
-                        <div class="form-group">
-                            <label>Email contacto</label>
-                            <input type="email" class="form-control"  ng-model="ctlr.agendar.emailContacto">
+                        <div class="row">
+                            <div class="col-md-5 form-group">
+                                <label>Nombre contacto</label>
+                                <input type="text" class="form-control" ng-model="ctlr.agendar.nombreContacto">
+                            </div>
+                            <div class="col-md-3 form-group">
+                                <label>Telefono contacto</label>
+                                <input type="text" class="form-control"  ng-model="ctlr.agendar.telefonoContacto">
+                            </div>
+                            <div class="col-md-4 form-group">
+                                <label>Email contacto</label>
+                                <input type="email" class="form-control"  ng-model="ctlr.agendar.emailContacto">
+                            </div>
                         </div>
                         <div class="form-group">
                             <label>Detalle agendamiento</label>
                             <input type="text" class="form-control"  ng-model="ctlr.agendar.detalleContacto">
                         </div>
-                        <div class="form-group">
-                            <label>Tipo Agendamiento</label>
-                            <ui-select ng-model="ctlr.tipoAgendamiento"
-                                       theme="bootstrap"
-                                       ng-disabled="ctrl.disabled"
-                                       reset-search-input="true"
-                                       title="Duracion">
-                                <ui-select-match placeholder="">{{ctlr.tipoAgendamiento}}</ui-select-match>
-                                <ui-select-choices repeat="tipo in ctlr.tipoAgendamientos"
-                                                   
-                                                   refresh-delay="0">
-                                    <div ng-bind-html="tipo"></div>
-                                </ui-select-choices>
-                            </ui-select>
-                        </div>
-                        <div class="form-group">
-                            <label>Duracion</label>
-                            <ui-select ng-model="ctlr.duracion"
-                                       theme="bootstrap"
-                                       ng-disabled="ctrl.disabled"
-                                       reset-search-input="true"
-                                       title="Duracion">
-                                <ui-select-match placeholder="">{{ctlr.duracion}}</ui-select-match>
-                                <ui-select-choices repeat="dur in ctlr.duraciones"
-                                                   
-                                                   refresh-delay="0">
-                                    <div ng-bind-html="dur"></div>
-                                </ui-select-choices>
-                            </ui-select>
-                        </div>
-                        <div class="form-group">
-                            <label>Selecciona una entidad</label>
-                            <ui-select ng-model="ctlr.identidadSeleccionada" theme="selectize"  title="Choose a person">
-                                <ui-select-match placeholder="Seleciona una entidad">{{ctlr.identidadSeleccionada.nombreEntidad}}</ui-select-match>
-                                <ui-select-choices  repeat="item in ctlr.entidades.entidades | filter: $select.search"  >
-                                    <div ng-bind-html="item.nombreEntidad | highlight: $select.search"></div>
-                                    <small>
-                                        entidad {{item.nombreEntidad}}
-                                        region: <span ng-bind-html="item.id | highlight: $select.search"></span>
-                                    </small>
-                                </ui-select-choices>
-                            </ui-select>
-                        </div>
-                        <div class="form-group">
-                            <label>Seleccion fecha y hora</label>
-                            <p class="input-group">
-                                <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="dt" is-open="popup1.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" />
-                                <span class="input-group-btn">
-                                    <button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
-                                </span>
-                            </p>
+                        <div class="row">   
+                            <div class="col-md-5 form-group">
+                                <label>Tipo Agendamiento</label>
+                                <ui-select ng-model="ctlr.tipoAgendamiento"
+                                           theme="bootstrap"
+                                           ng-disabled="ctrl.disabled"
+                                           reset-search-input="true"
+                                           title="Duracion">
+                                    <ui-select-match placeholder="">{{ctlr.tipoAgendamiento}}</ui-select-match>
+                                    <ui-select-choices repeat="tipo in ctlr.tipoAgendamientos"
 
-                            <div uib-timepicker ng-model="mytime" ng-change="changed()" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></div>
+                                                       refresh-delay="0">
+                                        <div ng-bind-html="tipo"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                            <div class="col-md-2 form-group">
+                                <label>Duracion</label>
+                                <ui-select ng-model="ctlr.duracion"
+                                           theme="bootstrap"
+                                           ng-disabled="ctrl.disabled"
+                                           reset-search-input="true"
+                                           title="Duracion">
+                                    <ui-select-match placeholder="">{{ctlr.duracion}}</ui-select-match>
+                                    <ui-select-choices repeat="dur in ctlr.duraciones"
+
+                                                       refresh-delay="0">
+                                        <div ng-bind-html="dur"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+
+                            <div class="col-md-5 form-group">
+                                <label>Selecciona una entidad</label>
+                                <ui-select ng-model="ctlr.identidadSeleccionada" theme="selectize"  title="Choose a person">
+                                    <ui-select-match placeholder="Seleciona una entidad">{{ctlr.identidadSeleccionada.nombreEntidad}}</ui-select-match>
+                                    <ui-select-choices  repeat="item in ctlr.entidades.entidades | filter: $select.search"  >
+                                        <div ng-bind-html="item.nombreEntidad | highlight: $select.search"></div>
+                                        <small>
+                                            entidad {{item.nombreEntidad}}
+                                            region: <span ng-bind-html="item.id | highlight: $select.search"></span>
+                                        </small>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
                         </div>
-                        <button type="submit" ng-click="ctlr.agendar()" class="btn btn-sm btn-primary">Ingresar</button>
-                        <button type="submit" ng-click="ctlr.crearFecha()" class="btn btn-sm btn-primary">Ingresar</button>
+                        <div class="row">  
+                            <div class="col-md-6 form-group">
+                                <label>Seleccion fecha y hora</label>
+                                <p class="input-group">
+                                    <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="dt" is-open="popup1.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" />
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
+                                    </span>
+                                </p>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <div uib-timepicker ng-model="mytime" ng-change="changed()" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></div>
+                            </div>
+                        </div>
+
+                        <button type="submit" ng-click="ctlr.agendar()" class="btn btn-sm btn-primary">Ingresar</button><md-progress-circular ng-show="ctlr.spinnerCargando"  class="md-hue-2"  md-diameter="25px"></md-progress-circular>
 
                     </form>
+                    <toaster-container toaster-options="{'time-out': 3000}"></toaster-container>
                 </div>
 
 
             </div>
 
         </div>
-        <div class="col-md-6">
-            <div class="alert alert-success" role="alert" ng-hide="ctlr.ocultarMensaje">Agendamiento ingresado con exito</div>
-        </div>
-
     </div>
 </div>

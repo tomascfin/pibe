@@ -26,6 +26,7 @@
     "angular-rut": "^1.0.2",
     "angular-ui-uploader": "^1.4.1",
     "angular-ui-select": "^0.19.8",
-    "angular-sanitize": "^1.6.4"
+    "angular-sanitize": "^1.6.4",
+    "angular-websocket": "^2.0.0"
   }
 }

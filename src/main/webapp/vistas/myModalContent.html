@@ -1,0 +1,28 @@
+<div class="" ng-init="ctlr.obtenerAreas()">
+    <div class="panel-heading font-bold">Avance reclamo</div>
+    <div class="panel-body">
+        <form role="form">
+            <div class="form-group">
+                <label>Observacion</label>
+                <textarea class="form-control" rows="5" id="comment"  ng-model="ctlr.observacion"></textarea>
+            </div>
+            <div class="form-group">
+                <div class="radio">
+                    <label><input type="radio" name="optradio" checked="checked" ng-click="ctlr.siDerivar(false)">No derivar</label>
+                </div>
+                <div class="radio">
+                    <label><input type="radio" name="optradio" ng-click="ctlr.siDerivar(true)">Derivar</label>
+                </div>
+            </div>
+            <div class="form-group" ng-hide="ctlr.reclamoBoolean">
+                <label for="areas"> Asignar a: </label>
+                <select name="areas" id="areas" >
+                    <option ng-repeat="area in ctlr.areas" value="{{area.correoArea}}">{{area.nombreArea}}</option>
+                </select>
+            </div>
+            <button type="submit" ng-click="ctlr.editarReclamo()" class="btn btn-sm btn-success">Ingresar</button>
+        </form>
+    </div>
+
+
+</div>

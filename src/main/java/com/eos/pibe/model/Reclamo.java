@@ -16,6 +16,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 
@@ -25,6 +27,10 @@ import javax.persistence.Temporal;
  */
 @Entity
 @Table(name = "reclamo", schema = "public")
+
+@NamedQueries({@NamedQuery(name = "Reclamo.findAll", query = "SELECT r FROM Reclamo r ORDER BY r.prioridad ,r.fechaReclamo "),
+@NamedQuery(name = "Reclamo.findByTipoReclamo", query = "SELECT r FROM Reclamo r WHERE r.estadoReclamo = :tipo ORDER BY r.prioridad ,r.fechaReclamo"),
+@NamedQuery(name = "Reclamo.countByTipoReclamo", query = "SELECT COUNT(r) FROM Reclamo r WHERE r.estadoReclamo = :tipo")})
 public class Reclamo implements Serializable {
 
     @Id
@@ -47,8 +53,22 @@ public class Reclamo implements Serializable {
     private String rutaArchivo;
     @Column(name = "fecha_reclamo", nullable = false)
     private java.sql.Timestamp fechaReclamo;
+    @Column(length = 32, name = "prioridad", nullable = false)
+    private int prioridad;
+    @Column(length = 16, name = "estado_reclamo", nullable = false)
+    private int estadoReclamo;
+    @Column(length = 64, name = "colorHexidecimalValue", nullable = false)
+    private String colorHexidecimalValue;
     
     public Reclamo() {
+    }
+
+    public String getColorHexidecimalValue() {
+        return colorHexidecimalValue;
+    }
+
+    public void setColorHexidecimalValue(String colorHexidecimalValue) {
+        this.colorHexidecimalValue = colorHexidecimalValue;
     }
 
     public long getId() {
@@ -123,7 +143,23 @@ public class Reclamo implements Serializable {
         this.fechaReclamo = fechaReclamo;
     }
 
+    public int getPrioridad() {
+        return prioridad;
+    }
 
+    public void setPrioridad(int prioridad) {
+        this.prioridad = prioridad;
+    }
+
+    public int getEstadoReclamo() {
+        return estadoReclamo;
+    }
+
+    public void setEstadoReclamo(int estadoReclamo) {
+        this.estadoReclamo = estadoReclamo;
+    }
+
+    
     
     
 }

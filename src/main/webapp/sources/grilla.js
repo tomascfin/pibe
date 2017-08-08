@@ -17,8 +17,8 @@
         
         vm.prueba = function(objeto){
             $log.error(objeto);
-        }
-        //cellTemplate:'<button ng-click="grid.appScope.ctlr.prueba(row.entity)">Ver detalles</button>'}
+        };
+        
         $scope.gridOptions = {
             enableFiltering: true,
             columnDefs: [

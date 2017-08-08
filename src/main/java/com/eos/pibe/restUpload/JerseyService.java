@@ -19,38 +19,34 @@ import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
 @Path("/upload")
-public class JerseyService 
-{
-        
+public class JerseyService {
+
     @Inject
     PibeRest pibeRest;
-	@POST
-	@Path("/pdf")
-	@Consumes({MediaType.MULTIPART_FORM_DATA})
-	public Response uploadPdfFile(  @FormDataParam("file") InputStream fileInputStream,
-	                                @FormDataParam("file") FormDataContentDisposition fileMetaData) throws Exception
-	{
-	    String UPLOAD_PATH = "c:/temp/";
-	    try
-	    {
-	        int read = 0;
-	        byte[] bytes = new byte[1024];
-                String ruta = UPLOAD_PATH + fileMetaData.getFileName();
-	 
-	        OutputStream out = new FileOutputStream(new File(ruta));
-	        while ((read = fileInputStream.read(bytes)) != -1)
-	        {
-	            out.write(bytes, 0, read);
-	        }
-	        out.flush();
-	        out.close();
-                System.out.println("termina outputstream");
-                pibeRest.escanear(ruta);
-	    } catch (IOException e)
-	    {
-	        throw new WebApplicationException("Error while uploading file. Please try again !!");
-	    }
-	    return Response.status(Response.Status.OK).build();
-                    
-	}
+
+    @POST
+    @Path("/pdf")
+    @Consumes({MediaType.MULTIPART_FORM_DATA})
+    public Response uploadPdfFile(@FormDataParam("file") InputStream fileInputStream,
+            @FormDataParam("file") FormDataContentDisposition fileMetaData) throws Exception {
+        String UPLOAD_PATH = "c:/temp/";
+        try {
+            int read = 0;
+            byte[] bytes = new byte[1024];
+            String ruta = UPLOAD_PATH + fileMetaData.getFileName();
+
+            OutputStream out = new FileOutputStream(new File(ruta));
+            while ((read = fileInputStream.read(bytes)) != -1) {
+                out.write(bytes, 0, read);
+            }
+            out.flush();
+            out.close();
+            System.out.println("termina outputstream");
+            pibeRest.escanear(ruta);
+        } catch (IOException e) {
+            throw new WebApplicationException("Error while uploading file. Please try again !!");
+        }
+        return Response.status(Response.Status.OK).build();
+
+    }
 }

@@ -1,3 +1,4 @@
+
 <div ng-controller = "ControladorFrutal as ctlr" ng-init="ctlr.cargarData()">
     <form>
         <div class="form-group">
@@ -37,6 +38,9 @@
             <label for="tipo">Tipo Reclamo</label>
             <input type="text" class="form-control" id="tipo" ng-model="ctlr.reclamos.tipoReclamo">
         </div>
-        <button type="submit" class="btn btn-default" ng-click="ctlr.ingresarReclamo()">Registrar reclamo</button>
+        <button type="submit" class="btn btn-default" ng-click="ctlr.ingresarReclamo()">Registrar reclamo</button> <md-progress-circular ng-show="ctlr.spinnerCargando"  class="md-hue-2"  md-diameter="25px"></md-progress-circular>
     </form>
+     <toaster-container toaster-options="{'time-out': 3000}"></toaster-container>
+   
+    
 </div>

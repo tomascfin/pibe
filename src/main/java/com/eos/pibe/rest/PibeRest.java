@@ -9,6 +9,8 @@ import com.eos.pibe.model.Agendamiento;
 import com.eos.pibe.model.Entidad;
 import com.eos.pibe.model.MovimientoSeries;
 import com.eos.pibe.model.NumerosDeSerie;
+import com.eos.pibe.model.Reclamo;
+import com.eos.pibe.model.Usuarios;
 import com.eos.pibe.services.ServiciosRest;
 //import com.sun.jersey.core.header.FormDataContentDisposition;
 //import com.sun.jersey.multipart.FormDataParam;
@@ -34,14 +36,20 @@ import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
+import static javax.ws.rs.HttpMethod.PUT;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
@@ -100,6 +108,23 @@ public class PibeRest {
         return Response.ok(so).build();
     }
     
+    @GET
+    @Path("listar_series_detalle")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response listarDetalleSeries() {
+        StreamingOutput so = new StreamingOutput() {
+            @Override
+            public void write(OutputStream outputStream) throws IOException, WebApplicationException {
+                try {
+                    serviciosRest.listarDetalleSeries(outputStream);
+                } catch (Exception e) {
+                    System.out.println("Error en listar entidades: " + e.getMessage());
+                }
+            }
+        };
+        return Response.ok(so).build();
+    }
+    
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("ampliar_series")
@@ -121,7 +146,97 @@ public class PibeRest {
         return Response.ok(so).build();
     }
     
-
+    @GET
+    @Path("areas")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response listarAreas() {
+        StreamingOutput so = new StreamingOutput() {
+            @Override
+            public void write(OutputStream outputStream) throws IOException, WebApplicationException {
+                try {
+                    serviciosRest.listarAreas(outputStream);
+                } catch (Exception e) {
+                    System.out.println("Error en listar areas: " + e.getMessage());
+                }
+            }
+        };
+        return Response.ok(so).build();
+    }
+    
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("login")
+    public void obtenerLogin(@Context HttpServletRequest request){
+        
+         HttpSession session =request.getSession();
+         
+         Usuarios usuario = new Usuarios();
+         usuario.setNombres("Tomas Ignacio");
+         usuario.setApellidos("Riquelme Millar");
+         usuario.setIdUsuario(Integer.MIN_VALUE);
+         usuario.setPassword("password");
+          
+         session.setAttribute("user", usuario);
+         
+        
+    }
+    
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("get_login")
+    public Response getLogin(@Context HttpServletRequest request){
+        HttpSession session =request.getSession();
+        Usuarios user = (Usuarios)session.getAttribute("user");
+        System.out.println(user.getApellidos() + " " + user.getPassword());
+        
+        return null;
+    }
+    
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("ingresar_reclamo")
+    public Response ingresarReclamo(final InputStream requestBody) {
+        JsonReader cRead = Json.createReader(requestBody);
+        final JsonObject reclamo = cRead.readObject();
+        cRead.close();
+        
+        StreamingOutput so = new StreamingOutput() {
+            @Override
+            public void write(OutputStream outputStream) throws IOException, WebApplicationException {
+                try {
+                    serviciosRest.ingresarReclamo(outputStream, reclamo);
+                } catch (Exception e) {
+                    System.out.println("Error en listar entidades: " + e.getMessage());
+                }
+            }
+        };
+        return Response.ok(so).build();
+    }
+    
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("modificar_reclamo")
+    public Response modificarReclamo(final InputStream requestBody) {
+        JsonReader cRead = Json.createReader(requestBody);
+        final JsonObject reclamoJson = cRead.readObject();
+        cRead.close();
+        
+        StreamingOutput so = new StreamingOutput() {
+            @Override
+            public void write(OutputStream outputStream) throws IOException, WebApplicationException {
+                try {
+                    System.out.println("observacion: "+reclamoJson.getJsonString("observacion"));
+                    serviciosRest.modificarReclamo(outputStream, reclamoJson);
+                   
+                } catch (Exception e) {
+                    System.out.println("Error en listar entidades: " + e.getMessage());
+                }
+            }
+        };
+        return Response.ok(so).build();
+    
+    }
+    
     @GET
     @Path("listar_comunas")
     @Produces(MediaType.APPLICATION_JSON)
@@ -138,6 +253,60 @@ public class PibeRest {
         };
         return Response.ok(so).build();
     }
+    
+    @GET
+    @Path("listar_reclamos")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response listarReclamos(@QueryParam("tipo") final String tipo) {
+        StreamingOutput so = new StreamingOutput() {
+            @Override
+            public void write(OutputStream outputStream) throws IOException, WebApplicationException {
+                try {
+                    serviciosRest.listarComunas(outputStream);
+                } catch (Exception e) {
+                    System.out.println("Error en listar comunas: " + e.getMessage());
+                }
+            }
+        };
+        return Response.ok(so).build();
+    }
+    @GET
+    @Path("contador_reclamos")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response contadoReclamos(@QueryParam("tipo") final String tipo) {
+        StreamingOutput so = new StreamingOutput() {
+            @Override
+            public void write(OutputStream outputStream) throws IOException, WebApplicationException {
+                try {
+                    serviciosRest.contadorReclamos(outputStream);
+                } catch (Exception e) {
+                    System.out.println("Error en listar comunas: " + e.getMessage());
+                }
+            }
+        };
+        return Response.ok(so).build();
+    }
+    
+    @GET
+    @Path("listar_reclamos2")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Reclamo> listarReclamos2(@DefaultValue("1")@QueryParam("tipo") final String valor) {
+        int tipo = Integer.valueOf(valor);
+        System.out.println("valor -> "+valor);
+        if (tipo == 1) {
+            System.out.println("Entro a valor 1");
+            return em.createNamedQuery("Reclamo.findByTipoReclamo", Reclamo.class).setParameter("tipo", tipo).getResultList();
+        }else if(tipo == 2){
+            
+            return em.createNamedQuery("Reclamo.findByTipoReclamo", Reclamo.class).setParameter("tipo", tipo).getResultList();
+        
+        }else if(tipo == 3){
+             return em.createNamedQuery("Reclamo.findByTipoReclamo", Reclamo.class).setParameter("tipo", tipo).getResultList();
+        }
+        System.out.println("Entro");
+        return em.createNamedQuery("Reclamo.findAll", Reclamo.class).getResultList();
+    }
+    
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -207,7 +376,7 @@ public class PibeRest {
             serie.setFechaIngreso(fecha);
             serie.setUsos(usos);
             
-            serviciosRest.registrarMovimientoSeries(entidad, serie, usos, entidadIngresada.getString("tipoActivacion"));
+            serviciosRest.registrarMovimientoSeries(entidad, serie, entidadIngresada.getString("tipoActivacion"), entidadIngresada);
             //em.merge(serie);
             //serviciosRest.registrarEntidad(entidadIngresada);
         } catch (Exception e) {
@@ -343,6 +512,20 @@ public class PibeRest {
                 } catch (Exception e) {
                     System.out.println("Error en listar comunas: " + e.getMessage());
                 }
+            }
+        };
+        return Response.ok(so).build();
+    }
+    
+    @GET
+    @Path("detalle_serie/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response detalleSerie(@PathParam("id") final String id) {
+        StreamingOutput so = new StreamingOutput() {
+            @Override
+            public void write(OutputStream outputStream) throws IOException, WebApplicationException {
+                System.out.println(id);
+               serviciosRest.detalleSerie(outputStream, id);
             }
         };
         return Response.ok(so).build();
