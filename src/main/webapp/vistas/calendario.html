@@ -40,7 +40,6 @@
      <tabset>
                             <tab select="renderCalendar('myCalendar1')">
                               <tab-heading>
-                               <i class="glyphicon glyphicon-bell"></i> Calendario Agendamiento
                               </tab-heading>
                               <!--<div class="alert-success calAlert" ng-show="alertMessage != undefined && alertMessage != ''">
                                 <h4>{{alertMessage}}</h4>
@@ -48,9 +47,9 @@
                               <div class="btn-toolbar">
                                 <p class="pull-right lead">Opciones</p>
                                 <div class="btn-group">
-                                    <button class="btn btn-success" ng-click="changeView('agendaDay', 'myCalendar1')">Diario</button>
-                                    <button class="btn btn-success" ng-click="changeView('agendaWeek', 'myCalendar1')">Semanal</button>
-                                    <button class="btn btn-success" ng-click="changeView('month', 'myCalendar1')">Mensual</button>
+                                    <button class="button danger" ng-click="changeView('agendaDay', 'myCalendar1')">Diario</button>
+                                    <button class="button danger" ng-click="changeView('agendaWeek', 'myCalendar1')">Semanal</button>
+                                    <button class="button danger" ng-click="changeView('month', 'myCalendar1')">Mensual</button>
                                 </div>
                               </div>
                             <div class="calendario" ng-model="eventSources" calendar="myCalendar1" ui-calendar="uiConfig.calendar"></div>

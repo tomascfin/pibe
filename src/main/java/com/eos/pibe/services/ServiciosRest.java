@@ -6,11 +6,13 @@
 package com.eos.pibe.services;
 
 import com.eos.pibe.model.Agendamiento;
+import com.eos.pibe.model.Areas;
 import com.eos.pibe.model.Comuna;
 import com.eos.pibe.model.Entidad;
 import com.eos.pibe.model.MovimientoSeries;
 import com.eos.pibe.model.NumerosDeSerie;
 import com.eos.pibe.model.Provincia;
+import com.eos.pibe.model.Reclamo;
 import com.eos.pibe.model.Region;
 import static com.oracle.jrockit.jfr.ContentType.Timestamp;
 import java.io.OutputStream;
@@ -24,10 +26,26 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Properties;
+import java.util.TimeZone;
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
 import javax.ejb.Stateless;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.stream.JsonGenerator;
+import javax.mail.BodyPart;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -80,7 +98,83 @@ public class ServiciosRest {
         NumerosDeSerie serie = em.find(NumerosDeSerie.class, json.getString("idSerie"));
         serie.setUsos(serie.getUsos() + json.getJsonNumber("usos").intValue());
         em.merge(serie);
-        registrarMovimientoSeries(serie.getEntidad(), serie, json.getJsonNumber("usos").intValue(), "Ampliacion");
+        registrarMovimientoSeries(serie.getEntidad(), serie, "Ampliacion", json);
+    }
+
+    public void contadorReclamos(OutputStream os) {
+        Long abierto = em.createNamedQuery("Reclamo.countByTipoReclamo", Long.class).setParameter("tipo", 1).getSingleResult();
+        Long enProgreso = em.createNamedQuery("Reclamo.countByTipoReclamo", Long.class).setParameter("tipo", 2).getSingleResult();
+        Long finalizado = em.createNamedQuery("Reclamo.countByTipoReclamo", Long.class).setParameter("tipo", 3).getSingleResult();
+        Long eliminado = em.createNamedQuery("Reclamo.countByTipoReclamo", Long.class).setParameter("tipo", 4).getSingleResult();
+
+        JsonGenerator gen = Json.createGenerator(os);
+        gen.writeStartObject();
+        gen.write("abierto", abierto);
+        gen.write("enProgreso", enProgreso);
+        gen.write("finalizado", finalizado);
+        gen.write("eliminado", eliminado);
+        gen.writeEnd();
+        gen.flush();
+        gen.close();
+    }
+
+    public void modificarReclamo(OutputStream os, JsonObject json) {
+        Reclamo reclamo = em.find(Reclamo.class, json.getJsonNumber("id").longValue());
+        reclamo.setDetalleReclamo(json.getString("observacion"));
+        System.out.println("entro a modificar en service");
+        reclamo.setEstadoReclamo(2);
+        em.merge(reclamo);
+    }
+
+    public void ingresarReclamo(OutputStream os, JsonObject json) throws ParseException {
+        Reclamo reclamo = new Reclamo();
+        Entidad entidad = em.find(Entidad.class, json.getString("idEntidad"));
+        reclamo.setDetalleReclamo(json.getString("detalleReclamo"));
+        reclamo.setEmailContacto(json.getString("emailContacto"));
+        reclamo.setEntidad(entidad);
+
+        //horas
+        Timestamp fecha = new Timestamp(System.currentTimeMillis());//originalmente esta era la fecha que se asignaba
+        TimeZone timeZone = TimeZone.getTimeZone("America/Santiago");
+        Date fechaTest = new Date();
+        System.out.println("Date: "+fechaTest.toString());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
+        sdf.setTimeZone(timeZone);
+        
+        TimeZone.setDefault(TimeZone.getTimeZone("GMT-4"));
+        Date fechaTest2 = new Date();
+        //Date fecha4 = dateFormater.parse(fechaTest.toString());
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        timestamp.setYear(fechaTest2.getYear());
+        timestamp.setMonth(fechaTest2.getMonth());
+        timestamp.setDate(fechaTest2.getDate());
+        timestamp.setHours(fechaTest2.getHours());
+        timestamp.setMinutes(fechaTest2.getMinutes());
+        System.out.println(timestamp);
+
+        //fin horas
+        reclamo.setFechaReclamo(timestamp);
+        reclamo.setNombreContacto(json.getString("nombreContacto"));
+        reclamo.setNumeroContacto(json.getString("numeroContacto"));
+        reclamo.setPrioridad(json.getInt("prioridad"));
+
+        switch (json.getInt("prioridad")) {
+            case 1:
+                reclamo.setColorHexidecimalValue("#ee7351");
+                break;
+            case 2:
+                reclamo.setColorHexidecimalValue("#aa873b");
+                break;
+            default:
+                reclamo.setColorHexidecimalValue("#d2bcc2");
+                break;
+        }
+        reclamo.setRutaArchivo("");
+        reclamo.setTipoReclamo(json.getString("tipoReclamo"));
+        reclamo.setEstadoReclamo(1);
+        em.persist(reclamo);
+        em.flush();
+        enviarMailReclamo(json.getString("emailContacto"), reclamo);
     }
 
     public void listarEntidades(OutputStream os) {
@@ -100,6 +194,91 @@ public class ServiciosRest {
         gen.close();
     }
 
+    public void enviarMailReclamo(String emailDestino, Reclamo reclamo) {
+        System.out.println(reclamo.getEmailContacto() + reclamo.getDetalleReclamo() + reclamo.getNombreContacto() + " " + reclamo.getId());
+        final String username = "tomas.i.rm25@gmail.com";
+        final String password = "asusk40ab";
+
+        Properties props = new Properties();
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
+
+        Session session = Session.getInstance(props,
+                new javax.mail.Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(username, password);
+            }
+        });
+
+        try {
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress("tomas.i.rm25@gmail.com"));
+            message.setRecipients(Message.RecipientType.TO,
+                    InternetAddress.parse(reclamo.getEmailContacto()));
+            message.setSubject("Relacmo Ticket " + reclamo.getId());
+            message.setText("Estimado(a) " + reclamo.getNombreContacto() + ", los datos de su reclamo son: \n"
+                    + "Detalle del reclamo: " + reclamo.getDetalleReclamo() + " \n"
+                    + "Fecha de reclamo: " + reclamo.getFechaReclamo().toString());
+
+            Transport.send(message);
+
+            System.out.println("Done");
+
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void listarDetalleSeries(OutputStream os) {
+        List<NumerosDeSerie> series = em.createNamedQuery("Series.findAll").setParameter("activado", true).getResultList();
+        JsonGenerator gen = Json.createGenerator(os);
+        gen.writeStartObject();
+        gen.writeStartArray("datos");
+        for (NumerosDeSerie serie : series) {
+            gen.writeStartObject();
+            gen.write("numeroDeSerie", serie.getId());
+            gen.write("usos", serie.getUsos());
+            gen.write("establecimiento", serie.getEntidad().getNombreEntidad());
+            //gen.write("link", "<button ng-click= \"ctlr.saludoPrueba()\">Modificar </button>");
+            gen.writeEnd();
+        }
+        gen.writeEnd();
+        gen.writeEnd();
+        gen.flush();
+        gen.close();
+    }
+
+    public void detalleSerie(OutputStream os, String id) {
+        NumerosDeSerie serie = em.find(NumerosDeSerie.class, id);
+
+        JsonGenerator gen = Json.createGenerator(os);
+        gen.writeStartObject();
+        gen.write("numeroDeSerie", serie.getId());
+        gen.write("usos", serie.getUsos());
+        gen.write("establecimiento", serie.getEntidad().getNombreEntidad());
+
+        List<MovimientoSeries> movimientos = em.createNamedQuery("MovimientoSeries.findByNumeroDeSerie").setParameter("valor", serie).getResultList();
+        gen.writeStartArray("movimientos");
+        for (MovimientoSeries movimiento : movimientos) {
+            gen.writeStartObject();
+            gen.write("serie", movimiento.getNumeroDeSerie().getId());
+            gen.write("tipoMovimiento", movimiento.getTipoMovimiento());
+            gen.write("usosMovimiento", movimiento.getUsos());
+            gen.write("fechaMovimiento", movimiento.getFechaMovimiento().toString());
+            //gen.write("contacto", movimiento.get)
+            gen.writeEnd();
+        }
+        gen.writeEnd();
+        //gen.write("link", "<button ng-click= \"ctlr.saludoPrueba()\">Modificar </button>");
+
+        gen.writeEnd();
+        gen.flush();
+        gen.close();
+
+    }
+
     public void listarComunas(OutputStream os) {
 
         //Collections.sort(comunas, (Comuna p1, Comuna p2) -> p1.getNombreCiudad().compareTo(p2.getNombreCiudad()));
@@ -113,6 +292,41 @@ public class ServiciosRest {
             gen.write("value", comuna.getId());
             gen.write("provincia", comuna.getProvincia().getNombreProvincia());
             gen.write("region", comuna.getProvincia().getRegion().getNombreRegion());
+            gen.writeEnd();
+        }
+        gen.writeEnd();
+        gen.writeEnd();
+        gen.flush();
+        gen.close();
+    }
+    
+    public void listarAreas(OutputStream os){
+        JsonGenerator gen = Json.createGenerator(os);
+        List<Areas> areas = em.createNamedQuery("Areas.findAll", Areas.class).getResultList();
+        gen.writeStartObject();
+        gen.writeStartArray("areas");
+        for(Areas area : areas){
+            gen.writeStartObject();
+            gen.write("nombreArea", area.getNombreArea());
+            gen.write("correoArea", area.getCorreo_area());
+            gen.writeEnd();
+        }
+        gen.writeEnd();
+        gen.writeEnd();
+        gen.flush();
+        gen.close();
+    }
+
+    public void listarReclamos(OutputStream os) {
+
+        //Collections.sort(comunas, (Comuna p1, Comuna p2) -> p1.getNombreCiudad().compareTo(p2.getNombreCiudad()));
+        JsonGenerator gen = Json.createGenerator(os);
+        List<Reclamo> reclamos = em.createNamedQuery("Reclamo.findAll", Reclamo.class).getResultList();
+        gen.writeStartObject();
+        gen.writeStartArray("reclamos");
+        for (Reclamo reclamo : reclamos) {
+            gen.writeStartObject();
+
             gen.writeEnd();
         }
         gen.writeEnd();
@@ -170,6 +384,10 @@ public class ServiciosRest {
             gen.write("stick", "true");
             gen.write("detalle", agendamiento.getDetalleagendamiento());
             gen.write("title", agendamiento.getDetalleagendamiento());
+            gen.write("telefonoContacto", agendamiento.getTelefonoContacto());
+            gen.write("nombreContacto", agendamiento.getNombreContacto());
+            gen.write("emailContacto", agendamiento.getEmailContacto());
+            gen.write("nombreEstablecimiento", agendamiento.getEntidad().getNombreEntidad());
             gen.writeEnd();
 
         }
@@ -226,10 +444,10 @@ public class ServiciosRest {
         }
     }
 
-    public void registrarMovimientoSeries(Entidad entidad, NumerosDeSerie serie, int usos, String tipo) {
+    public void registrarMovimientoSeries(Entidad entidad, NumerosDeSerie serie,  String tipo, JsonObject json) {
 
         try {
-
+            
             MovimientoSeries movimientoSeries = new MovimientoSeries();
             movimientoSeries.setDetalleMovimiento("pruebas");
             movimientoSeries.setEntidad(entidad);
@@ -237,7 +455,8 @@ public class ServiciosRest {
             Timestamp timestamp = new Timestamp(System.currentTimeMillis());
             movimientoSeries.setFechaMovimiento(timestamp);
             movimientoSeries.setNumeroDeSerie(serie);
-            movimientoSeries.setUsos(usos);
+            movimientoSeries.setUsos(json.getJsonNumber("usos").intValue());
+            movimientoSeries.setNombreContacto("test");
             em.persist(movimientoSeries);
 
         } catch (PersistenceException e) {

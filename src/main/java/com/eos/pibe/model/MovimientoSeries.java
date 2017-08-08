@@ -15,6 +15,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
@@ -23,6 +24,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "movimiento_series", schema = "public")
+@NamedQuery(name = "MovimientoSeries.findByNumeroDeSerie", query = "SELECT m FROM MovimientoSeries m WHERE m.numeroDeSerie = :valor")
 public class MovimientoSeries implements Serializable {
 
     @Id
@@ -49,10 +51,44 @@ public class MovimientoSeries implements Serializable {
     
     @Column(name="usos")
     private int usos;
+    
+    @Column(name="nombre_contacto", length=64)
+    private String nombreContacto;
+    
+    @Column(name="telefono_contacto", length=64)
+    private String telefonoContacto;
+    
+    @Column(name="email_contacto", length=64)
+    private String emailContacto;
 
     public MovimientoSeries() {
     }
 
+    public String getNombreContacto() {
+        return nombreContacto;
+    }
+
+    public void setNombreContacto(String nombreContacto) {
+        this.nombreContacto = nombreContacto;
+    }
+
+    public String getTelefonoContacto() {
+        return telefonoContacto;
+    }
+
+    public void setTelefonoContacto(String telefonoContacto) {
+        this.telefonoContacto = telefonoContacto;
+    }
+
+    public String getEmailContacto() {
+        return emailContacto;
+    }
+
+    public void setEmailContacto(String emailContacto) {
+        this.emailContacto = emailContacto;
+    }
+    
+    
     public Long getId() {
         return id;
     }

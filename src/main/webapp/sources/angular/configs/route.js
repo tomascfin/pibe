@@ -16,12 +16,16 @@
     config.$inject = ['$stateProvider', '$urlRouterProvider'];
     function config($stateProvider, $urlRouterProvider) {
         $urlRouterProvider.otherwise('/home');
-
+        var layout = "vistas/app.html";
         $stateProvider
-                .state('home', {
+                 .state('home', {
+                 url: '/home',
+                 templateUrl: 'vistas/index.html'
+                 })
+                /*.state('home', {
                     url: '/home',
-                    templateUrl: 'vistas/index.html'
-                })
+                    templateUrl: 'app.html'
+                })*/
                 .state('productos', {
                     url: '/productos',
                     templateUrl: 'vistas/productos.html',
@@ -30,6 +34,10 @@
                 .state('header', {
                     url: '/header',
                     templateUrl: 'vistas/blocks/header.html'
+                })
+                 .state('websocket', {
+                    url: '/websocket',
+                    templateUrl: 'vistas/websocket2.html'
                 })
                 .state('registro_entidad', {
                     url: '/registro_entidad',

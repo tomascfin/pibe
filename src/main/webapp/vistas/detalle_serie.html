@@ -1,16 +1,31 @@
-<!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
-<html>
-    <head>
-        <title>TODO supply a title</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
-        <div>TODO write content</div>
-    </body>
-</html>
+<div ng-controller="ControllerDetalleSerie as ctlr">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="panel panel-default">
+                <div class="panel-heading ">
+                    Detalle Series
+                </div>
+                <table class="table table-striped m-b-none">
+                    <tbody>
+                        <tr>
+                            <td>Numero de serie</td>
+                            <td>{{ctlr.serie.numeroDeSerie}}</td>
+                        </tr>
+                        <tr>                    
+                            <td>Nombre entidad
+                            </td>
+                            <td>{{ctlr.serie.establecimiento}}</td>
+                        </tr>
+                        <tr>                    
+                            <td>Usos totales
+                            </td>
+                            <td>{{ctlr.serie.usos}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div external-scopes="clickHandler" ui-grid="gridOptions"    ui-grid-exporter class="grid" ui-grid-edit></div>
+    {{ctlr.movimientos}}
+</div>

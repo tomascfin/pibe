@@ -16,12 +16,16 @@
     config.$inject = ['$stateProvider', '$urlRouterProvider'];
     function config($stateProvider, $urlRouterProvider) {
         $urlRouterProvider.otherwise('/home');
-
+        var layout = "vistas/app.html";
         $stateProvider
-                .state('home', {
+                 .state('home', {
+                 url: '/home',
+                 templateUrl: 'vistas/index.html'
+                 })
+                /*.state('home', {
                     url: '/home',
-                    templateUrl: 'vistas/index.html'
-                })
+                    templateUrl: 'app.html'
+                })*/
                 .state('productos', {
                     url: '/productos',
                     templateUrl: 'vistas/productos.html',
@@ -30,6 +34,10 @@
                 .state('header', {
                     url: '/header',
                     templateUrl: 'vistas/blocks/header.html'
+                })
+                 .state('websocket', {
+                    url: '/websocket',
+                    templateUrl: 'vistas/websocket2.html'
                 })
                 .state('registro_entidad', {
                     url: '/registro_entidad',
@@ -43,15 +51,15 @@
                     url: '/activacion_pibe',
                     templateUrl: 'vistas/activacion_pibe.html'
                 })
-                 .state('registro_reclamo', {
+                .state('registro_reclamo', {
                     url: '/registro_reclamo',
                     templateUrl: 'vistas/registro_reclamo.html'
                 })
-                  .state('ampliacion', {
+                .state('ampliacion', {
                     url: '/ampliacion',
                     templateUrl: 'vistas/ampliacion.html'
                 })
-                 .state('calendario', {
+                .state('calendario', {
                     url: '/calendario',
                     templateUrl: 'vistas/calendario.html',
                     controller: 'calendario'
@@ -60,13 +68,25 @@
                     url: '/tabla_series',
                     templateUrl: 'vistas/tabla_series.html'
                 })
-                  .state('agendamiento', {
+                .state('agendamiento', {
                     url: '/agendamiento',
                     templateUrl: 'vistas/agendamiento.html',
                     controller: 'calendario'
                 })
+                .state('reclamos', {
+                    reloadOnSearch: false,
+                    url: '/reclamos',
+                    templateUrl: 'vistas/reclamos.html'
+                })
+                .state('grafico', {
+                    url: '/grafico',
+                    templateUrl: 'vistas/grafico.html'
+                })
+                .state('detalle_serie', {
+                    url: '/detalle_serie/:serieId',
+                    templateUrl: 'vistas/detalle_serie.html'
+                })
                 .state('about', {
-
                 });
     }
     ;

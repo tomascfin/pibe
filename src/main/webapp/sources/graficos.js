@@ -18,11 +18,11 @@
                 dataFormat: 'json',
                 dataSource: {
                     "chart": {
-                        "caption": "Monthly revenue for last year",
-                        "subCaption": "Harry's SuperMart",
+                        "caption": "Activaciones por mes",
+                        "subCaption": "",
                         "xAxisName": "Month",
-                        "yAxisName": "Revenues (In USD)",
-                        "numberPrefix": "$",
+                        "yAxisName": "Cantidad de activaciones",
+                        "numberPrefix": "",
                         "theme": "fint"
                     },
                     "data": [{
