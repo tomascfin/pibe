@@ -24,7 +24,8 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "areas", schema = "public")
-@NamedQueries({@NamedQuery(name = "Areas.findAll", query = "SELECT a FROM Areas a")})
+@NamedQueries({@NamedQuery(name = "Areas.findAll", query = "SELECT a FROM Areas a"),
+@NamedQuery(name = "Areas.findBy", query = "SELECT a FROM Areas a WHERE a.id = :id")})
 public class Areas implements Serializable {
     
     @Id
@@ -35,7 +36,7 @@ public class Areas implements Serializable {
     private String nombreArea;
    
     @Column(length = 32, name = "correo_area", nullable = false)
-    private String correo_area;
+    private String correoArea;
 
     public Areas() {
     }
@@ -56,14 +57,15 @@ public class Areas implements Serializable {
         this.nombreArea = nombreArea;
     }
 
-    public String getCorreo_area() {
-        return correo_area;
+    public String getCorreoArea() {
+        return correoArea;
     }
 
-    public void setCorreo_area(String correo_area) {
-        this.correo_area = correo_area;
+    public void setCorreoArea(String correoArea) {
+        this.correoArea = correoArea;
     }
-    
+
+ 
     
     
     

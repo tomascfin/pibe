@@ -59,8 +59,19 @@ public class Reclamo implements Serializable {
     private int estadoReclamo;
     @Column(length = 64, name = "colorHexidecimalValue", nullable = false)
     private String colorHexidecimalValue;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "area", nullable = true)
+    private Areas area;
     
     public Reclamo() {
+    }
+
+    public Areas getArea() {
+        return area;
+    }
+
+    public void setArea(Areas area) {
+        this.area = area;
     }
 
     public String getColorHexidecimalValue() {

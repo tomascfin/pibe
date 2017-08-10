@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package com.eos.pibe.model;
+
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
@@ -34,23 +35,35 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+
 /**
  *
- * @author Antonella
+ * @author Tomas
  */
 @Entity
 @Table(name = "USUARIOS")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Usuarios.findAll", query = "SELECT u FROM Usuarios u"),
-    @NamedQuery(name = "Usuarios.findByIdUsuario", query = "SELECT u FROM Usuarios u WHERE u.idUsuario = :idUsuario"),
-    @NamedQuery(name = "Usuarios.findByNombres", query = "SELECT u FROM Usuarios u WHERE u.nombres LIKE :nombres"),
-    @NamedQuery(name = "Usuarios.findByApellidos", query = "SELECT u FROM Usuarios u WHERE u.apellidos = :apellidos"),
-    @NamedQuery(name = "Usuarios.findByTelefono", query = "SELECT u FROM Usuarios u WHERE u.telefono = :telefono"),
-    @NamedQuery(name = "Usuarios.findByDireccion", query = "SELECT u FROM Usuarios u WHERE u.direccion = :direccion"),
-    @NamedQuery(name = "Usuarios.findByEmail", query = "SELECT u FROM Usuarios u WHERE u.email = :email"),
-    @NamedQuery(name = "Usuarios.findByFechaNac", query = "SELECT u FROM Usuarios u WHERE u.fechaNac = :fechaNac"),
-    @NamedQuery(name = "Usuarios.findBySexo", query = "SELECT u FROM Usuarios u WHERE u.sexo = :sexo"),
+    @NamedQuery(name = "Usuarios.findAll", query = "SELECT u FROM Usuarios u")
+    ,
+    @NamedQuery(name = "Usuarios.findByUserAndPass", query = "SELECT u FROM Usuarios u WHERE u.idUsuario = :idUsuario AND u.password = :password")
+    ,
+    @NamedQuery(name = "Usuarios.findByIdUsuario", query = "SELECT u FROM Usuarios u WHERE u.idUsuario = :idUsuario")
+    ,
+    @NamedQuery(name = "Usuarios.findByNombres", query = "SELECT u FROM Usuarios u WHERE u.nombres LIKE :nombres")
+    ,
+    @NamedQuery(name = "Usuarios.findByApellidos", query = "SELECT u FROM Usuarios u WHERE u.apellidos = :apellidos")
+    ,
+    @NamedQuery(name = "Usuarios.findByTelefono", query = "SELECT u FROM Usuarios u WHERE u.telefono = :telefono")
+    ,
+    @NamedQuery(name = "Usuarios.findByDireccion", query = "SELECT u FROM Usuarios u WHERE u.direccion = :direccion")
+    ,
+    @NamedQuery(name = "Usuarios.findByEmail", query = "SELECT u FROM Usuarios u WHERE u.email = :email")
+    ,
+    @NamedQuery(name = "Usuarios.findByFechaNac", query = "SELECT u FROM Usuarios u WHERE u.fechaNac = :fechaNac")
+    ,
+    @NamedQuery(name = "Usuarios.findBySexo", query = "SELECT u FROM Usuarios u WHERE u.sexo = :sexo")
+    ,
     @NamedQuery(name = "Usuarios.findByPassword", query = "SELECT u FROM Usuarios u WHERE u.password = :password")})
 public class Usuarios implements Serializable {
 
@@ -100,14 +113,12 @@ public class Usuarios implements Serializable {
     @Size(min = 1, max = 64)
     @Column(name = "password")
     private String password;
-    @Column(name = "usuario_vendedor")
-    private Boolean usuarioVendedor;
+
     @JoinTable(name = "USUARIOS_HAS_ROLES", joinColumns = {
         @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario")}, inverseJoinColumns = {
         @JoinColumn(name = "id_rol", referencedColumnName = "id_rol")})
     @ManyToMany
-    private List<Roles> rolesList;   
-
+    private List<Roles> rolesList;
 
     public Usuarios() {
     }
@@ -192,16 +203,6 @@ public class Usuarios implements Serializable {
         this.sexo = sexo;
     }
 
- 
-    public Boolean getUsuarioVendedor() {
-        return usuarioVendedor;
-    }
-
-    public void setUsuarioVendedor(Boolean usuarioVendedor) {
-        this.usuarioVendedor = usuarioVendedor;
-    }
-
-
     public List<Roles> getRolesList() {
         return rolesList;
     }
@@ -217,8 +218,6 @@ public class Usuarios implements Serializable {
     public void setPassword(String password) {
         this.password = password;
     }
-
-  
 
     @Override
     public int hashCode() {

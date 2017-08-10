@@ -34,10 +34,12 @@
             <label for="prioridad">Prioridad</label>
             <input type="number" class="form-control" id="prioridad" ng-model="ctlr.reclamos.prioridad">
         </div>
-         <div class="form-group">
-            <label for="tipo">Tipo Reclamo</label>
-            <input type="text" class="form-control" id="tipo" ng-model="ctlr.reclamos.tipoReclamo">
-        </div>
+          <div class="form-group">
+                <label for="areas"> Asignar a: </label>
+                <select name="areas" id="areas" ng-model = "ctlr.areaId">
+                    <option ng-repeat="area in ctlr.areas" value="{{area.id}}">{{area.nombreArea}}</option>
+                </select>
+            </div>
         <button type="submit" class="btn btn-default" ng-click="ctlr.ingresarReclamo()">Registrar reclamo</button> <md-progress-circular ng-show="ctlr.spinnerCargando"  class="md-hue-2"  md-diameter="25px"></md-progress-circular>
     </form>
      <toaster-container toaster-options="{'time-out': 3000}"></toaster-container>

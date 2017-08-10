@@ -75,13 +75,13 @@ public class PibeRest {
     @GET
     @Path("obtener_listado_series")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response prueba(@DefaultValue("true")@QueryParam("activado") final boolean bool,
-            @DefaultValue("")@QueryParam("valor") final String idEntidad) {
+    public Response prueba(@DefaultValue("true") @QueryParam("activado") final boolean bool,
+            @DefaultValue("") @QueryParam("valor") final String idEntidad) {
         StreamingOutput so = new StreamingOutput() {
             @Override
             public void write(OutputStream outputStream) throws IOException, WebApplicationException {
                 try {
-                    System.out.println("bollean :"+bool);
+                    System.out.println("bollean :" + bool);
                     serviciosRest.obtenerListadoSeries(outputStream, bool, idEntidad);
                 } catch (Exception e) {
                     System.out.println("Error en listar series: " + e.getMessage());
@@ -90,7 +90,7 @@ public class PibeRest {
         };
         return Response.ok(so).build();
     }
-    
+
     @GET
     @Path("listar_entidades")
     @Produces(MediaType.APPLICATION_JSON)
@@ -107,7 +107,7 @@ public class PibeRest {
         };
         return Response.ok(so).build();
     }
-    
+
     @GET
     @Path("listar_series_detalle")
     @Produces(MediaType.APPLICATION_JSON)
@@ -124,7 +124,7 @@ public class PibeRest {
         };
         return Response.ok(so).build();
     }
-    
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("ampliar_series")
@@ -132,7 +132,7 @@ public class PibeRest {
         JsonReader cRead = Json.createReader(requestBody);
         final JsonObject numeroDeSerie = cRead.readObject();
         cRead.close();
-        
+
         StreamingOutput so = new StreamingOutput() {
             @Override
             public void write(OutputStream outputStream) throws IOException, WebApplicationException {
@@ -145,7 +145,7 @@ public class PibeRest {
         };
         return Response.ok(so).build();
     }
-    
+
     @GET
     @Path("areas")
     @Produces(MediaType.APPLICATION_JSON)
@@ -162,36 +162,58 @@ public class PibeRest {
         };
         return Response.ok(so).build();
     }
-    
-    @GET
-    @Consumes(MediaType.APPLICATION_JSON)
+
+    @POST
     @Path("login")
-    public void obtenerLogin(@Context HttpServletRequest request){
-        
-         HttpSession session =request.getSession();
-         
-         Usuarios usuario = new Usuarios();
-         usuario.setNombres("Tomas Ignacio");
-         usuario.setApellidos("Riquelme Millar");
-         usuario.setIdUsuario(Integer.MIN_VALUE);
-         usuario.setPassword("password");
-          
-         session.setAttribute("user", usuario);
-         
-        
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response obtenerLogin(@Context HttpServletRequest request, InputStream requestBody) {
+        JsonReader cRead = Json.createReader(requestBody);
+        JsonObject json = cRead.readObject();
+        cRead.close();
+        int id = json.getJsonNumber("idUsuario").intValue();
+        String password = json.getJsonString("password").toString().replace("\"", "");
+        Usuarios usuario = null;
+        try {
+            usuario = em.createNamedQuery("Usuarios.findByUserAndPass", Usuarios.class)
+                    .setParameter("idUsuario", id)
+                    .setParameter("password", password)
+                    .getSingleResult();
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        if (usuario != null) {
+            HttpSession session = request.getSession();
+            session.setAttribute("user", usuario);
+
+            return Response.status(Response.Status.OK).build();
+        }
+
+        return Response.status(Response.Status.UNAUTHORIZED).build();
     }
-    
+
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("get_login")
-    public Response getLogin(@Context HttpServletRequest request){
-        HttpSession session =request.getSession();
-        Usuarios user = (Usuarios)session.getAttribute("user");
+    public Response getLogin(@Context HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        final Usuarios user = (Usuarios) session.getAttribute("user");
         System.out.println(user.getApellidos() + " " + user.getPassword());
-        
-        return null;
+
+        StreamingOutput so = new StreamingOutput() {
+            @Override
+            public void write(OutputStream outputStream) throws IOException, WebApplicationException {
+                try {
+                    serviciosRest.obtenerUsuario(outputStream, user);
+                } catch (Exception e) {
+                    System.out.println("Error en listar entidades: " + e.getMessage());
+                }
+            }
+        };
+
+        return Response.ok(so).build();
     }
-    
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("ingresar_reclamo")
@@ -199,7 +221,7 @@ public class PibeRest {
         JsonReader cRead = Json.createReader(requestBody);
         final JsonObject reclamo = cRead.readObject();
         cRead.close();
-        
+
         StreamingOutput so = new StreamingOutput() {
             @Override
             public void write(OutputStream outputStream) throws IOException, WebApplicationException {
@@ -212,7 +234,7 @@ public class PibeRest {
         };
         return Response.ok(so).build();
     }
-    
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("modificar_reclamo")
@@ -220,23 +242,23 @@ public class PibeRest {
         JsonReader cRead = Json.createReader(requestBody);
         final JsonObject reclamoJson = cRead.readObject();
         cRead.close();
-        
+
         StreamingOutput so = new StreamingOutput() {
             @Override
             public void write(OutputStream outputStream) throws IOException, WebApplicationException {
                 try {
-                    System.out.println("observacion: "+reclamoJson.getJsonString("observacion"));
+                    System.out.println("observacion: " + reclamoJson.getJsonString("observacion"));
                     serviciosRest.modificarReclamo(outputStream, reclamoJson);
-                   
+
                 } catch (Exception e) {
                     System.out.println("Error en listar entidades: " + e.getMessage());
                 }
             }
         };
         return Response.ok(so).build();
-    
+
     }
-    
+
     @GET
     @Path("listar_comunas")
     @Produces(MediaType.APPLICATION_JSON)
@@ -253,7 +275,7 @@ public class PibeRest {
         };
         return Response.ok(so).build();
     }
-    
+
     @GET
     @Path("listar_reclamos")
     @Produces(MediaType.APPLICATION_JSON)
@@ -270,6 +292,7 @@ public class PibeRest {
         };
         return Response.ok(so).build();
     }
+
     @GET
     @Path("contador_reclamos")
     @Produces(MediaType.APPLICATION_JSON)
@@ -286,27 +309,26 @@ public class PibeRest {
         };
         return Response.ok(so).build();
     }
-    
+
     @GET
     @Path("listar_reclamos2")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Reclamo> listarReclamos2(@DefaultValue("1")@QueryParam("tipo") final String valor) {
+    public List<Reclamo> listarReclamos2(@DefaultValue("1") @QueryParam("tipo") final String valor) {
         int tipo = Integer.valueOf(valor);
-        System.out.println("valor -> "+valor);
+        System.out.println("valor -> " + valor);
         if (tipo == 1) {
             System.out.println("Entro a valor 1");
             return em.createNamedQuery("Reclamo.findByTipoReclamo", Reclamo.class).setParameter("tipo", tipo).getResultList();
-        }else if(tipo == 2){
-            
+        } else if (tipo == 2) {
+
             return em.createNamedQuery("Reclamo.findByTipoReclamo", Reclamo.class).setParameter("tipo", tipo).getResultList();
-        
-        }else if(tipo == 3){
-             return em.createNamedQuery("Reclamo.findByTipoReclamo", Reclamo.class).setParameter("tipo", tipo).getResultList();
+
+        } else if (tipo == 3) {
+            return em.createNamedQuery("Reclamo.findByTipoReclamo", Reclamo.class).setParameter("tipo", tipo).getResultList();
         }
         System.out.println("Entro");
         return em.createNamedQuery("Reclamo.findAll", Reclamo.class).getResultList();
     }
-    
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -329,7 +351,7 @@ public class PibeRest {
         }
         return Response.status(Response.Status.OK).build();
     }
-    
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     //@Produces(MediaType.APPLICATION_JSON)
@@ -338,7 +360,7 @@ public class PibeRest {
         JsonReader cRead = Json.createReader(requestBody);
         JsonObject agendamientoJson = cRead.readObject();
         cRead.close();
-      
+
         try {
             serviciosRest.registrarAgendamiento(agendamientoJson);
         } catch (Exception e) {
@@ -347,7 +369,7 @@ public class PibeRest {
         }
         return Response.status(Response.Status.OK).build();
     }
-    
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     //@Produces(MediaType.APPLICATION_JSON)
@@ -356,26 +378,26 @@ public class PibeRest {
         JsonReader cRead = Json.createReader(requestBody);
         JsonObject entidadIngresada = cRead.readObject();
         cRead.close();
-        
+
         Entidad entidad = em.find(Entidad.class, entidadIngresada.getString("idEntidad"));
         NumerosDeSerie serie = em.find(NumerosDeSerie.class, entidadIngresada.getString("idSerie"));
-        System.out.println("usos que habia "+ serie.getUsos());
-         System.out.println("el nombre de la entidad es: "+entidad.getNombreEntidad());
+        System.out.println("usos que habia " + serie.getUsos());
+        System.out.println("el nombre de la entidad es: " + entidad.getNombreEntidad());
         /*if (entidad != null) {
             return Response.status(Response.Status.CONFLICT).entity("Id ya existe: " + entidadIngresada.getString("idEntidad")).build();
         }*/
         try {
             Date fecha = new Date();
             //CriteriaBuilder cb = em.getCriteriaBuilder();
-        //CriteriaUpdate<NumerosDeSerie> updateCriteria = cb.createCriteriaUpdate(NumerosDeSerie.class);
+            //CriteriaUpdate<NumerosDeSerie> updateCriteria = cb.createCriteriaUpdate(NumerosDeSerie.class);
             int usos = serie.getUsos() + entidadIngresada.getInt("usos");
-            System.out.println("usos: "+usos);
+            System.out.println("usos: " + usos);
             serie.setActivado(true);
             serie.setEntidad(entidad);
             //serie.setFechaIngreso(new Date(entidadIngresada.getString("fechaActivacion")));
             serie.setFechaIngreso(fecha);
             serie.setUsos(usos);
-            
+
             serviciosRest.registrarMovimientoSeries(entidad, serie, entidadIngresada.getString("tipoActivacion"), entidadIngresada);
             //em.merge(serie);
             //serviciosRest.registrarEntidad(entidadIngresada);
@@ -424,7 +446,7 @@ public class PibeRest {
                 NumerosDeSerie serie = new NumerosDeSerie();
                 serie.setActivado(false);
                 serie.setAnuladoPorReinstalacion(false);
-                System.out.println("Valor--> "+valor);
+                System.out.println("Valor--> " + valor);
                 serie.setId(valor);
                 serie.setEntidad(null);
                 serie.setUsos(0);
@@ -463,15 +485,12 @@ public class PibeRest {
             @Override
             public void write(OutputStream outputStream) throws IOException, WebApplicationException {
 
-                
-               serviciosRest.eliminarAgendamiento(id);
+                serviciosRest.eliminarAgendamiento(id);
             }
         };
         return Response.ok(so).build();
     }
-    
-    
-    
+
     @GET
     @Path("registrar_serie")
     @Produces(MediaType.APPLICATION_JSON)
@@ -499,7 +518,7 @@ public class PibeRest {
         };
         return Response.ok(so).build();
     }
-    
+
     @GET
     @Path("listar_agendamientos")
     @Produces(MediaType.APPLICATION_JSON)
@@ -516,7 +535,7 @@ public class PibeRest {
         };
         return Response.ok(so).build();
     }
-    
+
     @GET
     @Path("detalle_serie/{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -525,7 +544,7 @@ public class PibeRest {
             @Override
             public void write(OutputStream outputStream) throws IOException, WebApplicationException {
                 System.out.println(id);
-               serviciosRest.detalleSerie(outputStream, id);
+                serviciosRest.detalleSerie(outputStream, id);
             }
         };
         return Response.ok(so).build();

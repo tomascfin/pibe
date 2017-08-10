@@ -86,6 +86,7 @@
 
 
         };
+        
         vm.rowObject = {};
         vm.cargarRowObject = function (objeto) {
             vm.rowObject = JSON.stringify(objeto.detalleReclamo);

@@ -76,6 +76,8 @@
         $scope.searchTerm;
         vm.activacionUsos = "";
         vm.idExiste = false;
+        vm.areas = [];
+        vm.areaId = 0;
         vm.tipoActivacion = "Activacion";
         vm.tipoActivaciones = ["Activacion", "Reinstalacion"];
         vm.duraciones = [15, 30, 45, 60];
@@ -157,7 +159,7 @@
             $log.error("tab");
             $log.error(id);
         };
-        function Reclamo(detalleReclamo, emailContacto, nombreContacto, numeroContacto, prioridad, tipoReclamo, idEntidad) {
+        function Reclamo(detalleReclamo, emailContacto, nombreContacto, numeroContacto, prioridad, tipoReclamo, idEntidad, idArea) {
             this.id = null,
                     this.detalleReclamo = detalleReclamo,
                     this.emailContacto = emailContacto,
@@ -166,7 +168,8 @@
                     this.prioridad = prioridad,
                     this.rutaArchivo = null,
                     this.tipoReclamo = tipoReclamo,
-                    this.idEntidad = idEntidad
+                    this.idEntidad = idEntidad,
+                    this.idArea = idArea;
 
         }
         ;
@@ -184,11 +187,13 @@
             $log.error(bool);
             vm.obtenerSeriesDisponibles(bool);
             vm.obtenerEntidades();
+            vm.obtenerAreas();
         };
 
         vm.cargarData2 = function (bool) {
             $log.error(bool);
             vm.obtenerEntidades();
+            vm.obtenerAreas();
         };
         vm.probarToaster = function () {
             toaster.pop($scope.toaster.type, $scope.toaster.title, $scope.toaster.text);
@@ -197,7 +202,8 @@
         };
         vm.ingresarReclamo = function () {
             vm.spinnerCargando = true;
-            var object = new Reclamo(vm.reclamos.detalleReclamo, vm.reclamos.emailContacto, vm.reclamos.nombreContacto, vm.reclamos.numeroContacto, vm.reclamos.prioridad, vm.reclamos.tipoReclamo, vm.identidadSeleccionada.id);
+            $log.error(vm.areaId);
+            var object = new Reclamo(vm.reclamos.detalleReclamo, vm.reclamos.emailContacto, vm.reclamos.nombreContacto, vm.reclamos.numeroContacto, vm.reclamos.prioridad, vm.reclamos.tipoReclamo, vm.identidadSeleccionada.id, Number(vm.areaId));
             ;
             ServicioWS.ingresarReclamo(object)
                     .then(function (response) {
@@ -249,6 +255,22 @@
                         vm.entidades = response.data;
                     });
 
+        };
+        
+        vm.obtenerAreas = function(){
+            $log.error("areas");
+            ServicioWS.getAreas()
+                    .then(function(response){
+                        for (var i = 0; i < response.data.areas.length; i++) {
+                            vm.areas.push(response.data.areas[i]);
+                        }  
+                    $log.error(vm.areas);
+                    }).catch(function (e) {
+                $log.error('Error: ', e);
+                throw e;
+            }).finally(function () {
+            
+            });
         };
 
         vm.obtenerComunas = function () {

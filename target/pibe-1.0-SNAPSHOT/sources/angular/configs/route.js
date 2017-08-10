@@ -20,8 +20,12 @@
         $stateProvider
                  .state('home', {
                  url: '/home',
-                 templateUrl: 'vistas/index.html'
-                 })
+                 templateUrl: 'vistas/home.html'
+                 })/*
+                 .state('inicio', {
+                 url: '/inicio',
+                 templateUrl: 'index.html'
+                 })*/
                 /*.state('home', {
                     url: '/home',
                     templateUrl: 'app.html'
@@ -34,7 +38,11 @@
                 .state('header', {
                     url: '/header',
                     templateUrl: 'vistas/blocks/header.html'
-                })
+                })/*
+                .state('login', {
+                    url: '/login',
+                    templateUrl: 'login.html'
+                })*/
                  .state('websocket', {
                     url: '/websocket',
                     templateUrl: 'vistas/websocket2.html'

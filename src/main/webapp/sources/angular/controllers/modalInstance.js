@@ -8,13 +8,14 @@
     angular
             .module('app')
             .controller('ModalInstanceCtrl', ModalInstanceCtrl);
-    ModalInstanceCtrl.$inject = ['$scope', '$log', '$uibModalInstance', 'ServicioWS','items'];
-    function ModalInstanceCtrl($scope, $log, $uibModalInstance, ServicioWS, items) {
+    ModalInstanceCtrl.$inject = ['$scope', '$log', '$uibModalInstance', 'ServicioWS','items', '$window'];
+    function ModalInstanceCtrl($scope, $log, $uibModalInstance, ServicioWS, items, $window) {
         var vm = this;
         vm.observacion = "";
-        vm.reclamo = {id: items, observacion: ""};
+        vm.reclamo = {id: items, observacion: "", idArea: 0};
         vm.reclamoBoolean = true;
         vm.areas = [];
+        vm.areaId = 0;
         vm.siDerivar = function (bool){
           if(bool === true){
               vm.reclamoBoolean = false;
@@ -25,7 +26,6 @@
         vm.editarReclamo = function (){
             $log.error(vm.observacion);
             vm.modificar();
-            $uibModalInstance.close();
         };
         
         vm.obtenerAreas = function(){
@@ -44,12 +44,11 @@
         };
          vm.modificar = function (){
              vm.reclamo.observacion = vm.observacion;
+             vm.reclamo.idArea = Number(vm.areaId);
               ServicioWS.modificarReclamo(vm.reclamo)
                     .then(function (response) {
-
-                        $log.error(response.data);
-                
-                
+                        $uibModalInstance.close();
+                        $window.location.reload();
                     }).catch(function (e) {
                 $log.error('Error: ', e);
                 throw e;

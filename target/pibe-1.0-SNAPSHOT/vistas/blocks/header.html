@@ -1,5 +1,5 @@
-<nav class="navbar navbar-default">
-    <div class="container-fluid" >
+<nav class="navbar navbar-default" ng-controller="HeaderController as ctlr">
+    <div class="container-fluid" ng-init="ctlr.getLogin()">
         <ul class="nav navbar-nav">
             <li><a ui-sref="home">Home</a></li>
             <li class="dropdown">
@@ -23,6 +23,7 @@
             <li><a ui-sref="grafico">Grafico</a></li>
             <li><a ui-sref="reclamos">Reclamos</a></li>
             <li><a ui-sref="websocket">websocket</a></li>
+            {{ctlr.usuario.nombreUsuario}}
         </ul>
     </div>
 </nav>

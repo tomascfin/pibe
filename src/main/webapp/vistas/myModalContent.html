@@ -16,8 +16,8 @@
             </div>
             <div class="form-group" ng-hide="ctlr.reclamoBoolean">
                 <label for="areas"> Asignar a: </label>
-                <select name="areas" id="areas" >
-                    <option ng-repeat="area in ctlr.areas" value="{{area.correoArea}}">{{area.nombreArea}}</option>
+                <select name="areas" id="areas" ng-model = "ctlr.areaId">
+                    <option ng-repeat="area in ctlr.areas" value="{{area.id}}">{{area.nombreArea}}</option>
                 </select>
             </div>
             <button type="submit" ng-click="ctlr.editarReclamo()" class="btn btn-sm btn-success">Ingresar</button>

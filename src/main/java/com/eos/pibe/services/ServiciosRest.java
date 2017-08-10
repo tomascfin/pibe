@@ -9,11 +9,13 @@ import com.eos.pibe.model.Agendamiento;
 import com.eos.pibe.model.Areas;
 import com.eos.pibe.model.Comuna;
 import com.eos.pibe.model.Entidad;
+import com.eos.pibe.model.HistorialReclamos;
 import com.eos.pibe.model.MovimientoSeries;
 import com.eos.pibe.model.NumerosDeSerie;
 import com.eos.pibe.model.Provincia;
 import com.eos.pibe.model.Reclamo;
 import com.eos.pibe.model.Region;
+import com.eos.pibe.model.Usuarios;
 import static com.oracle.jrockit.jfr.ContentType.Timestamp;
 import java.io.OutputStream;
 import java.sql.Time;
@@ -52,6 +54,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import javax.servlet.http.HttpSession;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
@@ -94,6 +97,17 @@ public class ServiciosRest {
 
     }
 
+    public void obtenerUsuario(OutputStream os, Usuarios user) {
+
+        JsonGenerator gen = Json.createGenerator(os);
+        gen.writeStartObject();
+        gen.write("nombreUsuario", user.getNombres());
+        gen.write("idUsuario", user.getIdUsuario());
+        gen.writeEnd();
+        gen.flush();
+        gen.close();
+    }
+
     public void ampliarSeries(OutputStream os, JsonObject json) {
         NumerosDeSerie serie = em.find(NumerosDeSerie.class, json.getString("idSerie"));
         serie.setUsos(serie.getUsos() + json.getJsonNumber("usos").intValue());
@@ -119,11 +133,25 @@ public class ServiciosRest {
     }
 
     public void modificarReclamo(OutputStream os, JsonObject json) {
+
         Reclamo reclamo = em.find(Reclamo.class, json.getJsonNumber("id").longValue());
         reclamo.setDetalleReclamo(json.getString("observacion"));
         System.out.println("entro a modificar en service");
         reclamo.setEstadoReclamo(2);
         em.merge(reclamo);
+
+        //sout json number
+        System.out.println("id area: " + json.getJsonNumber("idArea"));
+        //primero: buscar correo con el derivado
+        Areas area = em.find(Areas.class, json.getJsonNumber("idArea").longValue());
+
+        if (area != null) {
+            System.out.println("Correo: " + area.getCorreoArea());
+            reclamo.setArea(area);
+            enviarMailReclamo(area.getCorreoArea(), reclamo);
+        }
+        em.merge(reclamo);
+        registrarMovimientoReclamos(reclamo, reclamo.getArea());
     }
 
     public void ingresarReclamo(OutputStream os, JsonObject json) throws ParseException {
@@ -133,14 +161,17 @@ public class ServiciosRest {
         reclamo.setEmailContacto(json.getString("emailContacto"));
         reclamo.setEntidad(entidad);
 
+        Areas area = em.find(Areas.class, json.getJsonNumber("idArea").longValue());
+        reclamo.setArea(area);
+
         //horas
         Timestamp fecha = new Timestamp(System.currentTimeMillis());//originalmente esta era la fecha que se asignaba
         TimeZone timeZone = TimeZone.getTimeZone("America/Santiago");
         Date fechaTest = new Date();
-        System.out.println("Date: "+fechaTest.toString());
+        System.out.println("Date: " + fechaTest.toString());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
         sdf.setTimeZone(timeZone);
-        
+
         TimeZone.setDefault(TimeZone.getTimeZone("GMT-4"));
         Date fechaTest2 = new Date();
         //Date fecha4 = dateFormater.parse(fechaTest.toString());
@@ -170,11 +201,13 @@ public class ServiciosRest {
                 break;
         }
         reclamo.setRutaArchivo("");
-        reclamo.setTipoReclamo(json.getString("tipoReclamo"));
+        reclamo.setTipoReclamo("");
         reclamo.setEstadoReclamo(1);
         em.persist(reclamo);
         em.flush();
         enviarMailReclamo(json.getString("emailContacto"), reclamo);
+
+        registrarMovimientoReclamos(reclamo, reclamo.getArea());
     }
 
     public void listarEntidades(OutputStream os) {
@@ -195,7 +228,7 @@ public class ServiciosRest {
     }
 
     public void enviarMailReclamo(String emailDestino, Reclamo reclamo) {
-        System.out.println(reclamo.getEmailContacto() + reclamo.getDetalleReclamo() + reclamo.getNombreContacto() + " " + reclamo.getId());
+
         final String username = "tomas.i.rm25@gmail.com";
         final String password = "asusk40ab";
 
@@ -216,7 +249,7 @@ public class ServiciosRest {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress("tomas.i.rm25@gmail.com"));
             message.setRecipients(Message.RecipientType.TO,
-                    InternetAddress.parse(reclamo.getEmailContacto()));
+                    InternetAddress.parse(emailDestino));
             message.setSubject("Relacmo Ticket " + reclamo.getId());
             message.setText("Estimado(a) " + reclamo.getNombreContacto() + ", los datos de su reclamo son: \n"
                     + "Detalle del reclamo: " + reclamo.getDetalleReclamo() + " \n"
@@ -299,22 +332,33 @@ public class ServiciosRest {
         gen.flush();
         gen.close();
     }
-    
-    public void listarAreas(OutputStream os){
+
+    public void listarAreas(OutputStream os) {
         JsonGenerator gen = Json.createGenerator(os);
         List<Areas> areas = em.createNamedQuery("Areas.findAll", Areas.class).getResultList();
         gen.writeStartObject();
         gen.writeStartArray("areas");
-        for(Areas area : areas){
+        for (Areas area : areas) {
             gen.writeStartObject();
+            gen.write("id", area.getId());
             gen.write("nombreArea", area.getNombreArea());
-            gen.write("correoArea", area.getCorreo_area());
+            gen.write("correoArea", area.getCorreoArea());
             gen.writeEnd();
         }
         gen.writeEnd();
         gen.writeEnd();
         gen.flush();
         gen.close();
+    }
+
+    public void registrarMovimientoReclamos(Reclamo reclamo, Areas area) {
+
+        HistorialReclamos historialReclamos = new HistorialReclamos();
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        historialReclamos.setArea(area);
+        historialReclamos.setReclamo(reclamo);
+        historialReclamos.setFechaHistorial(timestamp);
+        em.persist(historialReclamos);
     }
 
     public void listarReclamos(OutputStream os) {
@@ -444,10 +488,10 @@ public class ServiciosRest {
         }
     }
 
-    public void registrarMovimientoSeries(Entidad entidad, NumerosDeSerie serie,  String tipo, JsonObject json) {
+    public void registrarMovimientoSeries(Entidad entidad, NumerosDeSerie serie, String tipo, JsonObject json) {
 
         try {
-            
+
             MovimientoSeries movimientoSeries = new MovimientoSeries();
             movimientoSeries.setDetalleMovimiento("pruebas");
             movimientoSeries.setEntidad(entidad);

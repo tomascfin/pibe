@@ -17,6 +17,10 @@
             $log.error("entro a la funcion de obtener areas");
             return $http.get("http://localhost:8080/pibe/ws/pibe/areas");
         };
+         vm.login = function (json) {
+            $log.error("entro a la funcion de obtener areas");
+            return $http.post("http://localhost:8080/pibe/ws/pibe/login", json);
+        };
         vm.getSeriesDisponibles = function (bool, idEntidad) {
             $log.error("entro a la funcion del servicio");
             return $http.get("http://localhost:8080/pibe/ws/pibe/obtener_listado_series?activado=" + bool + "&valor=" + idEntidad);
@@ -39,7 +43,7 @@
             return $http.post("http://localhost:8080/pibe/ws/pibe/registrar_agendamiento", json);
         };
         vm.ingresarReclamo = function (json) {
-            $log.error("agendamiento");
+            $log.error("reclamo", json);
             return $http.post("http://localhost:8080/pibe/ws/pibe/ingresar_reclamo", json);
         };
         vm.modificarReclamo = function (json) {
