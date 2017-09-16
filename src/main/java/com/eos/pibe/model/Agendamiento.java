@@ -5,6 +5,8 @@
  */
 package com.eos.pibe.model;
 
+import org.eclipse.persistence.annotations.CascadeOnDelete;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -31,6 +33,7 @@ import javax.persistence.TemporalType;
 @Table(name = "agendamiento", schema = "public")
 @NamedQueries({@NamedQuery(name = "Agendamiento.findAll", query = "SELECT a FROM Agendamiento a"),
 @NamedQuery(name = "Agendamiento.findBy", query = "SELECT a FROM Agendamiento a WHERE a.id = :valor ")})
+@CascadeOnDelete
 public class Agendamiento implements Serializable {
 
     @Id
