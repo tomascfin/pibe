@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import javax.inject.Inject;
 
+import javax.servlet.annotation.WebServlet;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;

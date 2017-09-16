@@ -13,6 +13,7 @@ public class AgendamientoDao {
     @PersistenceContext(unitName = "pibe_db")
     private EntityManager em;
 
+    @Tra
     public void eliminarAgendamiento(Long id) {
         Agendamiento agendamiento = em.find(Agendamiento.class, id);
         try {

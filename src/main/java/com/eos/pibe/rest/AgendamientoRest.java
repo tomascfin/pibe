@@ -1,6 +1,7 @@
 package com.eos.pibe.rest;
 
 import com.eos.pibe.dao.AgendamientoDao;
+import com.eos.pibe.services.AgendamientoService;
 import com.eos.pibe.services.ServiciosRest;
 
 import javax.ejb.Stateless;
@@ -17,12 +18,9 @@ import java.io.OutputStream;
 public class AgendamientoRest {
 
     @Inject
-    ServiciosRest serviciosRest;
+    AgendamientoService agendamientoService;
 
-    @Inject
-    AgendamientoDao agendamientoDao;
-
-    @GET
+    @DELETE
     @Path("eliminar_agendamiento")
     @Produces(MediaType.APPLICATION_JSON)
     public Response eliminarAgendamiento(@QueryParam("id") final Long id) {
@@ -30,7 +28,24 @@ public class AgendamientoRest {
             @Override
             public void write(OutputStream outputStream) throws IOException, WebApplicationException {
 
-                serviciosRest.eliminarAgendamiento(id);
+               // agendamientoService.eliminarAgendamiento(id);
+            }
+        };
+        return Response.ok(so).build();
+    }
+
+    @GET
+    @Path("listar_agendamientos")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response listarAgendamientos() {
+        StreamingOutput so = new StreamingOutput() {
+            @Override
+            public void write(OutputStream outputStream) throws IOException, WebApplicationException {
+                try {
+                    agendamientoService.listarAgendamienetos(outputStream);
+                } catch (Exception e) {
+                    System.out.println("Error en listar comunas: " + e.getMessage());
+                }
             }
         };
         return Response.ok(so).build();
