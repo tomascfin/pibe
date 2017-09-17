@@ -96,6 +96,8 @@ public class ServiciosRest {
 
     }
 
+
+
     public void obtenerUsuario(OutputStream os, Usuarios user) {
 
         JsonGenerator gen = Json.createGenerator(os);
@@ -193,7 +195,12 @@ public class ServiciosRest {
         em.persist(reclamo);
         em.flush();
         enviarMailReclamo(json.getString("emailContacto"), reclamo);
-
+        JsonGenerator gen = Json.createGenerator(os);
+        gen.writeStartObject();
+        gen.write("id", reclamo.getId());
+        gen.writeEnd();
+        gen.flush();
+        gen.close();
         registrarMovimientoReclamos(reclamo, reclamo.getArea());
     }
 

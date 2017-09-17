@@ -1,5 +1,5 @@
 
-<div ng-controller = "ControladorFrutal as ctlr" ng-init="ctlr.cargarData()">
+<div ng-controller = "ControladorUpload as ctlr" ng-init="ctlr.cargarData()">
     <form>
         <div class="form-group">
             <label >Selecciona entidad</label>
@@ -34,9 +34,24 @@
             <label for="prioridad">Prioridad</label>
             <input type="number" class="form-control" id="prioridad" ng-model="ctlr.reclamos.prioridad">
         </div>
-        <div class="">
-            <label for="email_contacto">Archivos</label>
-            <input type="file"  ng-model="ctlr.archivos" class="form-control" id ="myFileField"/>
+        <div class="form-group">
+            <div>
+                <div style="float:right;">
+                    <button ng-click="btn_upload()">Subir</button>
+                    <button ng-click="btn_clean()">Remover todo</button>
+                </div>
+                <input type="file" id="file1" multiple/>
+            </div>
+            <div ng-repeat="file in files"
+                 style="margin-top: 20px;border-bottom-color: antiquewhite;border-bottom-style: double;">
+                <div><span>{{file.name}}</span>
+                    <div style="float:right;"><span>{{file.humanSize}}</span><a ng-click="btn_remove(file)"
+                                                                                title="Remove from list to be uploaded"><i
+                            class="icon-remove"></i></a></div>
+                </div>
+                <progress style="width:400px;" value="{{file.loaded ? file.loaded : 0}}"
+                          max="{{file.size}}"></progress>
+            </div>
         </div>
           <div class="form-group">
                 <label for="areas"> Asignar a: </label>

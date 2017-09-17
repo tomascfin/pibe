@@ -21,7 +21,7 @@
             $log.error("Entro a vm.login");
             vm.usuario.idUsuario = Number(vm.id);
             vm.usuario.password = String(vm.password);
-          $http.get("http://localhost:8080/pibe/ws/pibe/get_login",).then(function (response) {
+          $http.get("http://localhost:8080/pibe/ws/pibe/get_login").then(function (response) {
               $log.error(response.data);
                vm.usuario =  response.data;
             }).catch(function (e) {

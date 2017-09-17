@@ -5,7 +5,7 @@
             .module('LoginApp')
             .controller('LoginController', LoginController);
     LoginController.$inject = ['$scope', '$log', '$window', '$http'];
-    function LoginController($scope, $log, $window, $http, ) {
+    function LoginController($scope, $log, $window, $http ) {
 
 
         var vm = this;

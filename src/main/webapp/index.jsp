@@ -111,9 +111,7 @@
         <script src="sources/angular/app/app.js"></script>
         <script src="sources/angular/configs/route.js"></script>
         <script src="sources/angular/services/servicios.js"></script>
-        <script src="sources/angular/services/fileUploadService.js.js"></script>
         <script src="sources/angular/factory/factory.js"></script>
-        <script src="sources/angular/directivas/archivoDirectiva.js.js"></script>
         <script src="sources/grilla.js"></script>
         <script src="sources/graficos.js"></script>
         <script src="sources/angular/controllers/calendario.js"></script>

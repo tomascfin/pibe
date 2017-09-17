@@ -6,8 +6,8 @@
             .controller('ControladorFrutal', controlador);
 
 
-    controlador.$inject = ['$scope', '$log', 'ServicioWS', '$http', 'RutHelper', '$q', '$timeout', '$element', 'uibDateParser', 'uiUploader', 'uiGridConstants', 'toaster', '$window', 'archivoDirective', 'fileUploadSerive'];
-    function controlador($scope, $log, ServicioWS, $http, RutHelper, $q, $timeout, $element, uibDateParser, uiUploader, uiGridConstants, toaster, $window, archivoDirective, fileUploadSerive) {
+    controlador.$inject = ['$scope', '$log', 'ServicioWS', '$http', 'RutHelper', '$q', '$timeout', '$element', 'uibDateParser', 'uiUploader', 'uiGridConstants', 'toaster', '$window'];
+    function controlador($scope, $log, ServicioWS, $http, RutHelper, $q, $timeout, $element, uibDateParser, uiUploader, uiGridConstants, toaster, $window ) {
         ///TEMPLATE
         var isIE = !!navigator.userAgent.match(/MSIE/i);
         if (isIE) {
@@ -179,9 +179,7 @@
             $log.error("prueba");
         };
 
-        vm.subirArchivo = function () {
-          var uploadUrl = "";
-        };
+
         function comunaObjeto(value, display, provincia, region) {
             this.value = value;
             this.display = display;
@@ -497,6 +495,8 @@
 
 
         };
+
+
         /* $scope.btn_remove = function(file) {
          $log.info('deleting=' + file);
          uiUploader.removeFile(file);
