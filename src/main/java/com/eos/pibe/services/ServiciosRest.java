@@ -16,7 +16,6 @@ import com.eos.pibe.model.Provincia;
 import com.eos.pibe.model.Reclamo;
 import com.eos.pibe.model.Region;
 import com.eos.pibe.model.Usuarios;
-import static com.oracle.jrockit.jfr.ContentType.Timestamp;
 import java.io.OutputStream;
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -166,24 +165,12 @@ public class ServiciosRest {
 
         //horas
         Timestamp fecha = new Timestamp(System.currentTimeMillis());//originalmente esta era la fecha que se asignaba
-        TimeZone timeZone = TimeZone.getTimeZone("America/Santiago");
         Date fechaTest = new Date();
         System.out.println("Date: " + fechaTest.toString());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
-        sdf.setTimeZone(timeZone);
 
-        TimeZone.setDefault(TimeZone.getTimeZone("GMT-4"));
         Date fechaTest2 = new Date();
-        //Date fecha4 = dateFormater.parse(fechaTest.toString());
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        timestamp.setYear(fechaTest2.getYear());
-        timestamp.setMonth(fechaTest2.getMonth());
-        timestamp.setDate(fechaTest2.getDate());
-        timestamp.setHours(fechaTest2.getHours());
-        timestamp.setMinutes(fechaTest2.getMinutes());
-        System.out.println(timestamp);
-
-        //fin horas
+        Timestamp timestamp = new Timestamp(fechaTest2.getTime());
         reclamo.setFechaReclamo(timestamp);
         reclamo.setNombreContacto(json.getString("nombreContacto"));
         reclamo.setNumeroContacto(json.getString("numeroContacto"));
@@ -381,7 +368,7 @@ public class ServiciosRest {
 
     public void listarAgendamienetos(OutputStream os) {
         List<Agendamiento> agendamientos = em.createNamedQuery("Agendamiento.findAll").getResultList();
-        System.out.println("Entro a service");
+        System.out.println("Entro a services prueba");
         String inicio = "";
         String fin = "";
         JsonGenerator gen = Json.createGenerator(os);

@@ -19,6 +19,10 @@ public class AgendamientoService {
     @Inject
     AgendamientoDao agendamientoDao;
 
+    public void eliminarAgendamiento(Long id) {
+        agendamientoDao.eliminarAgendamiento(id);
+    }
+
     public void listarAgendamienetos(OutputStream os) {
         List<Agendamiento> agendamientos= agendamientoDao.listarAgendamientos();
         JsonGenerator gen = Json.createGenerator(os);

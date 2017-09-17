@@ -30,6 +30,7 @@ public class JerseyService {
     @Consumes({MediaType.MULTIPART_FORM_DATA})
     public Response uploadPdfFile(@FormDataParam("file") InputStream fileInputStream,
             @FormDataParam("file") FormDataContentDisposition fileMetaData) throws Exception {
+        System.out.println("Entro a upload servlet");
         String UPLOAD_PATH = "c:/temp/";
         try {
             int read = 0;

@@ -25,6 +25,7 @@ public class ApplicationConfig extends Application {
         final Set<Class<?>> resources = new HashSet<>();
 
         resources.add(com.eos.pibe.rest.PibeRest.class);
+        resources.add(com.eos.pibe.rest.AgendamientoRest.class);
         //resources.add(com.eos.pibe.websocket.EchoServer.class);
         //resources.add(com.eos.pibe.restUpload.UploadFileService.class);
           // Add your resources.

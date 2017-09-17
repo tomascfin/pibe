@@ -4,8 +4,8 @@
             .module('app')
             .service('ServicioWS', serviceWs);
 
-    serviceWs.$inject = ['$http', '$log'];
-    function serviceWs($http, $log) {
+    serviceWs.$inject = ['$http', '$log', '$location'];
+    function serviceWs($http, $log, $location) {
         var vm = this;
 
 
@@ -19,7 +19,8 @@
         };
          vm.login = function (json) {
             $log.error("entro a la funcion de obtener areas");
-            return $http.post("http://localhost:8080/pibe/ws/pibe/login", json);
+            console.log($location.path("/ws/pibe/login"));
+            return $http.post($location.path("/pibe/ws/pibe/login"), json);
         };
         vm.getSeriesDisponibles = function (bool, idEntidad) {
             $log.error("entro a la funcion del servicio");
@@ -59,11 +60,11 @@
         };
         vm.getEvents = function (id) {
             $log.error("entro a la funcion del servicio");
-            return $http.get("http://localhost:8080/pibe/ws/pibe/listar_agendamientos");
+            return $http.get("http://localhost:8080/pibe/ws/agendamiento/listar_agendamientos");
         };
         vm.eliminarAgendamiento = function (id) {
             $log.error("entro a la funcion del servicio");
-            return $http.get("http://localhost:8080/pibe/ws/pibe/eliminar_agendamiento?id=" + id);
+            return $http.delete("http://localhost:8080/pibe/ws/agendamiento/eliminar_agendamiento?id=" + id);
         };
         vm.listarDetalleSeries = function (id) {
             $log.error("entro a la funcion del servicio");

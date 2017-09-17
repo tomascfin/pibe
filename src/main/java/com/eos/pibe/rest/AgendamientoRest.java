@@ -13,7 +13,7 @@ import javax.ws.rs.core.StreamingOutput;
 import java.io.IOException;
 import java.io.OutputStream;
 
-@Path("Agendamiento")
+@Path("agendamiento")
 @Stateless
 public class AgendamientoRest {
 
@@ -28,7 +28,7 @@ public class AgendamientoRest {
             @Override
             public void write(OutputStream outputStream) throws IOException, WebApplicationException {
 
-               // agendamientoService.eliminarAgendamiento(id);
+                agendamientoService.eliminarAgendamiento(id);
             }
         };
         return Response.ok(so).build();
@@ -38,6 +38,7 @@ public class AgendamientoRest {
     @Path("listar_agendamientos")
     @Produces(MediaType.APPLICATION_JSON)
     public Response listarAgendamientos() {
+        System.out.println("Entro a ws agendamientos");
         StreamingOutput so = new StreamingOutput() {
             @Override
             public void write(OutputStream outputStream) throws IOException, WebApplicationException {

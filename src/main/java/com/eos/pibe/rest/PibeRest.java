@@ -522,6 +522,7 @@ public class PibeRest {
     @Path("listar_agendamientos")
     @Produces(MediaType.APPLICATION_JSON)
     public Response listarAgendamientos() {
+        System.out.println("entra a listar agendamientos de piberest");
         StreamingOutput so = new StreamingOutput() {
             @Override
             public void write(OutputStream outputStream) throws IOException, WebApplicationException {

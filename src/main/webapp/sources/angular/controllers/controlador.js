@@ -6,8 +6,8 @@
             .controller('ControladorFrutal', controlador);
 
 
-    controlador.$inject = ['$scope', '$log', 'ServicioWS', '$http', 'RutHelper', '$q', '$timeout', '$element', 'uibDateParser', 'uiUploader', 'uiGridConstants', 'toaster', '$window'];
-    function controlador($scope, $log, ServicioWS, $http, RutHelper, $q, $timeout, $element, uibDateParser, uiUploader, uiGridConstants, toaster, $window) {
+    controlador.$inject = ['$scope', '$log', 'ServicioWS', '$http', 'RutHelper', '$q', '$timeout', '$element', 'uibDateParser', 'uiUploader', 'uiGridConstants', 'toaster', '$window', 'archivoDirective', 'fileUploadSerive'];
+    function controlador($scope, $log, ServicioWS, $http, RutHelper, $q, $timeout, $element, uibDateParser, uiUploader, uiGridConstants, toaster, $window, archivoDirective, fileUploadSerive) {
         ///TEMPLATE
         var isIE = !!navigator.userAgent.match(/MSIE/i);
         if (isIE) {
@@ -74,6 +74,7 @@
         vm.comunasLimpio = [];
         vm.comunasFinales = vm.comunas;
         $scope.searchTerm;
+        vm.archivos = {};
         vm.activacionUsos = "";
         vm.idExiste = false;
         vm.areas = [];
@@ -176,6 +177,10 @@
 
         vm.prueba = function () {
             $log.error("prueba");
+        };
+
+        vm.subirArchivo = function () {
+          var uploadUrl = "";
         };
         function comunaObjeto(value, display, provincia, region) {
             this.value = value;
