@@ -25,65 +25,70 @@ public class JerseyService {
     @Inject
     PibeRest pibeRest;
 
-    @POST
+    /*@POST
     @Path("/pdf")
     @Consumes({MediaType.MULTIPART_FORM_DATA})
     public Response uploadPdfFile(final FormDataMultiPart multiPart,
-                                  @FormDataParam("file")
-                                          InputStream fileInputStream,
-                                  @QueryParam("id") final String id,
-                                  @FormDataParam("file") FormDataContentDisposition fileMetaData) throws Exception {
-       /* System.out.println("Entro a upload servlet");
-        String UPLOAD_PATH = "/home/tomas/Imágenes/";
-        try {
-            int read = 0;
-            byte[] bytes = new byte[1024];
-            String ruta = UPLOAD_PATH + id;
-            OutputStream out = new FileOutputStream(new File(ruta));
-            while ((read = fileInputStream.read(bytes)) != -1) {
-                out.write(bytes, 0, read);
-            }
-            out.flush();
-            out.close();
-            System.out.println("termina outputstream");
-            pibeRest.escanear(ruta);
-        } catch (IOException e) {
-            throw new WebApplicationException("Error while uploading file. Please try again !!");
-        }
-        return Response.status(Response.Status.OK).build();
+                                  @QueryParam("id") final String id) throws Exception {
+        List<FormDataBodyPart> bodyParts = multiPart.getFields("file");
 
+        StringBuffer fileDetails = new StringBuffer("");
+        System.out.println("tamaño multipart: "+bodyParts.size());
+        for (int i = 0; i < bodyParts.size(); i++) {
+            BodyPartEntity bodyPartEntity = (BodyPartEntity) bodyParts.get(i).getEntity();
+            String fileName = bodyParts.get(i).getContentDisposition().getFileName();
+            saveFile(bodyPartEntity.getInputStream(), id + "_" + i);
+            fileDetails.append(" File saved at /Volumes/Drive2/temp/file/" + id + "_" + i);
+        }
+        System.out.println(fileDetails);
+
+        return Response.ok(fileDetails.toString()).build();
     }*/
 
-        List<FormDataBodyPart> bodyParts = multiPart.getFields("file");
+    @Path("/pdf")
+    @POST
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public Response uploadFiles2(@DefaultValue("") @FormDataParam("tags") String tags,
+                                 @FormDataParam("file") List<FormDataBodyPart> bodyParts,
+                                 @FormDataParam("file") FormDataContentDisposition fileDispositions,
+                                 @QueryParam("id") final String id) {
 
         StringBuffer fileDetails = new StringBuffer("");
 
 		/* Save multiple files */
-        for (int i = 0; i < bodyParts.size(); i++) {
 
+        for (int i = 0; i < bodyParts.size(); i++) {
+			/*
+			 * Casting FormDataBodyPart to BodyPartEntity, which can give us
+			 * InputStream for uploaded file
+			 */
             BodyPartEntity bodyPartEntity = (BodyPartEntity) bodyParts.get(i).getEntity();
             String fileName = bodyParts.get(i).getContentDisposition().getFileName();
-            saveFile(bodyPartEntity.getInputStream(), id+"_"+i);
-            fileDetails.append(" File saved at /Volumes/Drive2/temp/file/" + fileName);
+
+            saveFile(bodyPartEntity.getInputStream(), id + "_" + i);
+
+            fileDetails.append(" File saved at C:/Users/Tomas/Pictures" + id + "_" + i);
         }
 
-		/* Save File 2 */
-
-
-        //fileDetails.append(" Tag Details : " + multiPart.getField("tags").getValue());
         System.out.println(fileDetails);
 
         return Response.ok(fileDetails.toString()).build();
     }
 
-    private void saveFile(InputStream file, String name) {
+        private void saveFile(InputStream file, String name) {
         try {
-			/* Change directory path */
-            java.nio.file.Path path = FileSystems.getDefault().getPath("/home/tomas/Imágenes/" + name);
+
+            /* Change directory path */
+            java.nio.file.Path path = FileSystems.getDefault().getPath("C:/Users/Tomas/Pictures" + name);
 			/* Save InputStream as file */
+            if(Files.exists(path)){
+                System.out.println("File si existe");
+                name = name + "_";
+                path = FileSystems.getDefault().getPath("C:/Users/Tomas/Pictures" + name +"_");
+            }
             Files.copy(file, path);
         } catch (IOException ie) {
             ie.printStackTrace();
         }
     }
-    }
+}

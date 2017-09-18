@@ -14,7 +14,7 @@ public class ReclamosJob implements Job{
 	public void execute(JobExecutionContext context)
 	throws JobExecutionException {
 
-		System.out.println("Mensaje cad 1 minuto");
+		//System.out.println("Mensaje cad 1 minuto");
 
 	}
 
