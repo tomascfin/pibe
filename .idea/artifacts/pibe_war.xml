@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="war" name="pibe:war">
-    <output-path>$PROJECT_DIR$/target</output-path>
-    <root id="archive" name="pibe.war">
-      <element id="artifact" artifact-name="pibe:war exploded" />
-    </root>
-  </artifact>
-</component>
