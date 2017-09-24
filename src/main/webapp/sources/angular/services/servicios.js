@@ -60,7 +60,7 @@
         };
         vm.getEvents = function (id) {
             $log.error("entro a la funcion del servicio");
-            return $http.get("http://localhost:8080/pibe/ws/agendamiento/listar_agendamientos");
+            return $http.get("http://localhost:8080/pibe/ws/pibe/listar_agendamientos");
         };
         vm.eliminarAgendamiento = function (id) {
             $log.error("entro a la funcion del servicio");

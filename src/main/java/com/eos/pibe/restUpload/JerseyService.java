@@ -17,6 +17,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.tomas.utils.Utils;
 import org.glassfish.jersey.media.multipart.*;
 
 @Path("/upload")
@@ -64,10 +65,10 @@ public class JerseyService {
 			 */
             BodyPartEntity bodyPartEntity = (BodyPartEntity) bodyParts.get(i).getEntity();
             String fileName = bodyParts.get(i).getContentDisposition().getFileName();
+            String randomString = "pibe_reclamos_" + Utils.randomString();
+            saveFile(bodyPartEntity.getInputStream(), id + "_" + randomString);
 
-            saveFile(bodyPartEntity.getInputStream(), id + "_" + i);
-
-            fileDetails.append(" File saved at C:/Users/Tomas/Pictures" + id + "_" + i);
+            fileDetails.append(" File saved at C:/fotos_pibe/" + id + "_" + randomString);
         }
 
         System.out.println(fileDetails);
@@ -79,12 +80,13 @@ public class JerseyService {
         try {
 
             /* Change directory path */
-            java.nio.file.Path path = FileSystems.getDefault().getPath("C:/Users/Tomas/Pictures" + name);
+            java.nio.file.Path path = FileSystems.getDefault().getPath("C:/fotos_pibe/" + name);
 			/* Save InputStream as file */
             if(Files.exists(path)){
+
                 System.out.println("File si existe");
                 name = name + "_";
-                path = FileSystems.getDefault().getPath("C:/Users/Tomas/Pictures" + name +"_");
+                path = FileSystems.getDefault().getPath("C:/fotos_pibe/" + name +"_");
             }
             Files.copy(file, path);
         } catch (IOException ie) {

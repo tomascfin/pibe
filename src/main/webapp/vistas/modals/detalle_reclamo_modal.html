@@ -1,0 +1,9 @@
+<div class="" ng-init="ctlr.obtenerReclamo()">
+    <div class="panel-heading font-bold">Avance reclamo</div>
+    <div class="panel-body">
+        <div class="" ng-repeat="r in ctlr.reclamo.linksImagenes">
+           <a href="http://localhost:8080/pibe/ws/archivos/fotos?activado={{r.rutaArchivo}}"
+               class="btn btn-primary">{{r.rutaArchivo}}</a>
+        </div>
+    </div>
+</div>

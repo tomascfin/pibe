@@ -26,7 +26,8 @@ public class ApplicationConfig extends Application {
 
         resources.add(com.eos.pibe.rest.PibeRest.class);
         resources.add(com.eos.pibe.rest.AgendamientoRest.class);
-        //resources.add(com.eos.pibe.websocket.EchoServer.class);
+        resources.add(com.eos.pibe.rest.ReclamoRest.class);
+        resources.add(com.eos.pibe.rest.FileDownloadRest.class);
         //resources.add(com.eos.pibe.restUpload.UploadFileService.class);
           // Add your resources.
         //resources.add(FileUploadService.class);

@@ -8,9 +8,9 @@
     angular
         .module('app')
         .controller('ControladorUpload', controlador);
-    controlador.$inject = ['$scope', '$log', 'ServicioWS', '$http', 'RutHelper', '$q', '$timeout', '$element', 'uibDateParser', 'uiUploader', 'uiGridConstants'];
+    controlador.$inject = ['$scope', '$log','toaster', 'ServicioWS', '$http', 'RutHelper', '$q', '$timeout', '$element', 'uibDateParser', 'uiUploader', 'uiGridConstants'];
 
-    function controlador($scope, $log, ServicioWS, $http, RutHelper, $q, $timeout, $element, uibDateParser, uiUploader, uiGridConstants) {
+    function controlador($scope, $log, toaster, ServicioWS, $http, RutHelper, $q, $timeout, $element, uibDateParser, uiUploader, uiGridConstants) {
         var vm = this;
         vm.spinnerCargando = false;
         vm.reclamos = [];
@@ -18,6 +18,11 @@
         vm.areas = [];
         vm.entidades = [];
         vm.id = "";
+        $scope.toaster = {
+            type: 'success',
+            title: 'Ingresado',
+            text: 'Reclamo correctamente ingresado'
+        };
 
         function Reclamo(detalleReclamo, emailContacto, nombreContacto, numeroContacto, prioridad, tipoReclamo, idEntidad, idArea) {
             this.id = null,
@@ -87,7 +92,9 @@
                     vm.spinnerCargando = false;
                     vm.id = response.data.id;
                     $log.error("id: "+ response.data.id);
-                    //toaster.pop($scope.toaster.type, $scope.toaster.title, $scope.toaster.text);
+                    $scope.btn_upload(vm.id);
+                    toaster.pop($scope.toaster.type, $scope.toaster.title, $scope.toaster.text);
+
                     return response.data;
 
                 }).catch(function (e) {
@@ -95,7 +102,7 @@
                 throw e;
             }).finally(function () {
                 $log.error('This finally block');
-                $scope.btn_upload(vm.id);
+                //$scope.btn_upload(vm.id);
             });
 
         };

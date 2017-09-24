@@ -10,7 +10,7 @@
      vm.obtenerUibModal = function(size, template, params){
           return $uibModal.open({
           animation: true,
-          templateUrl: template || 'myModalContent.html',
+          templateUrl: template || 'modals/avanzar_reclamo_modal.html',
           controller: 'ModalResultInstanceCtrl',
           size: size,
           resolve: {
@@ -20,6 +20,20 @@
           }
         });
      };
+
+        vm.obtenerUibModalDetalleReclamo = function(size, template, params){
+            return $uibModal.open({
+                animation: true,
+                templateUrl: template || 'modals/detalle_reclamo_modal.html',
+                controller: 'ModalResultInstanceCtrl',
+                size: size,
+                resolve: {
+                    params: function() {
+                        return params;
+                    }
+                }
+            });
+        };
     
     }
     

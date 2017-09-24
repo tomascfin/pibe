@@ -1,10 +1,11 @@
 (function () {
     'use strict';
     angular
-            .module('app')
-            .controller('reclamosController', Reclamos);
+        .module('app')
+        .controller('reclamosController', Reclamos);
 
     Reclamos.$inject = ['$scope', '$window', '$compile', '$timeout', 'uiCalendarConfig', '$log', 'ServicioWS', 'uiGridConstants', '$stateParams', '$state', '$uibModal'];
+
     function Reclamos($scope, $window, $compile, $timeout, uiCalendarConfig, $log, ServicioWS, uiGridConstants, $stateParams, $state, $uibModal) {
         $log.error("cargo js");
         var vm = this;
@@ -29,8 +30,19 @@
         $scope.modalInstance = {};
         vm.prueba = function (objeto) {
         };
-        $scope.columnasSinBoton = [{name: 'P', enableSorting: false, enableFiltering: false, field: 'colorHexidecimalValue', "cellTemplate": "<div class=\"ui-grid-cell-contents ng-scope ng-binding\" ng-style=\"{'background-color':COL_FIELD}\">", width: 30},
-            {field: 'id', "cellTemplate": "<div class=\"ui-grid-cell-contents ng-scope ng-binding\" ng-style=\"{'background-color':COL_FIELD}\">", width: 30},
+        $scope.columnasSinBoton = [{
+            name: 'P',
+            enableSorting: false,
+            enableFiltering: false,
+            field: 'colorHexidecimalValue',
+            "cellTemplate": "<div class=\"ui-grid-cell-contents ng-scope ng-binding\" ng-style=\"{'background-color':COL_FIELD}\">",
+            width: 30
+        },
+            {
+                field: 'id',
+                "cellTemplate": "<div class=\"ui-grid-cell-contents ng-scope ng-binding\" ng-style=\"{'background-color':COL_FIELD}\">",
+                width: 30
+            },
             {field: 'nombreContacto'},
             {field: 'emailContacto'},
             {field: 'detalleReclamo'},
@@ -44,12 +56,14 @@
             {field: 'detalleReclamo'},
             {field: 'entidad.nombreEntidad', displayName: 'Nombre entidad'},
             {field: 'fechaReclamo'},
-            {field: 'Acciones', enableFiltering: false, width: 285, cellTemplate:
-                        '<div class="grid-action-cell">' +
-                        '<a   class="btn btn-success" ng-click="grid.appScope.ctlr.open(row.entity.id)">Avanzar</a>' +
-                        '<a   href="#" class="btn btn-default">Cerrar</a>' +
-                        '<a   href="#" class="btn btn-default">Historial</a>' +
-                        '<a   href="#" class="btn btn-danger">Eliminar</a></div>'}];
+            {
+                field: 'Acciones', enableFiltering: false, width: 285, cellTemplate:
+            '<div class="grid-action-cell">' +
+            '<a   class="btn btn-success" ng-click="grid.appScope.ctlr.open(row.entity.id)">Avanzar</a>' +
+            '<a   class="btn btn-success" ng-click="grid.appScope.ctlr.abrirDetalleReclamoModal(row.entity.id)">Detalle</a>' +
+            '<a   href="#" class="btn btn-default">Historial</a>' +
+            '<a   href="#" class="btn btn-danger">Eliminar</a></div>'
+            }];
 
         $scope.gridOptions = {
             gridMenuShowHideColumns: false,
@@ -80,13 +94,15 @@
             }
         };
         $scope.splice = function () {
-            $scope.columns.splice(1, 0, {field: 'boton',
+            $scope.columns.splice(1, 0, {
+                field: 'boton',
                 enableFiltering: false,
-                cellTemplate: '<button ng-click="grid.appScope.ctlr.cargarRowObject(row.entity.detalleReclamo)">Click Here</button>'});
+                cellTemplate: '<button ng-click="grid.appScope.ctlr.cargarRowObject(row.entity.detalleReclamo)">Click Here</button>'
+            });
 
 
         };
-        
+
         vm.rowObject = {};
         vm.cargarRowObject = function (objeto) {
             vm.rowObject = JSON.stringify(objeto.detalleReclamo);
@@ -102,14 +118,14 @@
             $scope.gridOptions.data = [];
 
             ServicioWS.listarReclamos(variable)
-                    .then(function (response) {
+                .then(function (response) {
 
-                        for (var i = 0; i < response.data.length; i++) {
-                            $scope.gridOptions.data.push(response.data[i]);
-                            $scope.gridOptions.data[i].fechaReclamo = moment(response.data[i].fechaReclamo).format('YYYY-MM-DD HH:mm:ss');
-                            vm.columnaActivada = false;
-                        }
-                    }).catch(function (e) {
+                    for (var i = 0; i < response.data.length; i++) {
+                        $scope.gridOptions.data.push(response.data[i]);
+                        $scope.gridOptions.data[i].fechaReclamo = moment(response.data[i].fechaReclamo).format('YYYY-MM-DD HH:mm:ss');
+                        vm.columnaActivada = false;
+                    }
+                }).catch(function (e) {
                 $log.error('Error: ', e);
                 throw e;
             }).finally(function () {
@@ -118,11 +134,11 @@
 
         vm.contadorReclamos = function () {
             ServicioWS.contadorReclamos()
-                    .then(function (response) {
+                .then(function (response) {
 
-                        vm.reclamo = response.data;
+                    vm.reclamo = response.data;
 
-                    }).catch(function (e) {
+                }).catch(function (e) {
                 $log.error('Error: ', e);
                 throw e;
             }).finally(function () {
@@ -130,7 +146,6 @@
             });
         };
         ////modal
-
 
 
         vm.items = ['item1', 'item2', 'item3'];
@@ -144,7 +159,7 @@
                 animation: vm.animationsEnabled,
                 ariaLabelledBy: 'modal-title',
                 ariaDescribedBy: 'modal-body',
-                templateUrl: 'vistas/myModalContent.html',
+                templateUrl: 'vistas/modals/avanzar_reclamo_modal.html',
                 controller: 'ModalInstanceCtrl',
                 controllerAs: 'ctlr',
                 size: 20,
@@ -168,6 +183,38 @@
             });
         };
 
+        vm.abrirDetalleReclamoModal = function (id) {
+            $log.error("entro a open");
+
+            var modalInstance = $uibModal.open({
+                animation: vm.animationsEnabled,
+                ariaLabelledBy: 'modal-title',
+                ariaDescribedBy: 'modal-body',
+                templateUrl: 'vistas/modals/detalle_reclamo_modal.html',
+                controller: 'DetalleReclamoCtrl',
+                controllerAs: 'ctlr',
+                size: 20,
+                resolve: {
+                    items: function () {
+                        return id;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (selectedItem) {
+                /*for (var i = 0; i < $scope.gridOptions.data.length; ++i) {
+                 $scope.gridOptions.data.splice(i--, 1);
+                 }
+                 vm.datos('1');    */
+                location.reload();
+
+                vm.selected = selectedItem;
+            }, function () {
+                $log.info('Modal dismissed at: ' + new Date());
+            });
+
+        }
+
         vm.openComponentModal = function () {
             var modalInstance = $uibModal.open({
                 animation: vm.animationsEnabled,
@@ -188,7 +235,7 @@
             });
         };
 
-        vm.openMultipleModals = function () {
+        /*vm.openMultipleModals = function () {
             $uibModal.open({
                 animation: vm.animationsEnabled,
                 ariaLabelledBy: 'modal-title-bottom',
@@ -210,7 +257,7 @@
                     $scope.name = 'top';
                 }
             });
-        };
+        };*/
 
         vm.toggleAnimation = function () {
             vm.animationsEnabled = !$ctrl.animationsEnabled;

@@ -98,6 +98,7 @@
                     .then(function (response) {
                         for (var i = 0; i < response.data.events.length; i++) {
                             $scope.events.push(response.data.events[i])
+                            $log.error(response.data.events[i]);
                         }
                     }).catch(function (e) {
                 $log.error('Error: ', e);

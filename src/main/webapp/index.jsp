@@ -120,6 +120,7 @@
         <script src="sources/angular/controllers/detalle_serie.js"></script>
         <script src="sources/angular/controllers/headerController.js"></script>
         <script src="sources/angular/controllers/modalInstance.js"></script>
+        <script src="sources/angular/controllers/detalleReclamoController.js"></script>
         <script src="sources/angular/controllers/component.js"></script>
         <script src="sources/reclamos.js"></script>
 
